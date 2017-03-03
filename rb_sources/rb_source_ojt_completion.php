@@ -152,7 +152,6 @@ class rb_source_ojt_completion extends rb_base_source {
 
     protected function define_columnoptions() {
         global $DB;
-
         $columnoptions = array(
             new rb_column_option(
                 'ojt',
@@ -168,7 +167,14 @@ class rb_source_ojt_completion extends rb_base_source {
                 get_string('evaluatelink', 'rb_source_ojt_completion'),
                 'ojt.name',
                 array('joins' => 'ojt', 'displayfunc' => 'ojt_evaluate_link',
-                    'extrafields' => array('userid' => 'base.userid', 'ojtid' => 'base.ojtid'))
+                    'extrafields' =>
+                        array(
+                            'userid' => 'base.userid',
+                            'ojtid' => 'base.ojtid',
+                            // KINEO CCM
+                            'courseid' => 'base.courseid'
+                            )
+                    )
             ),
 
             new rb_column_option(
@@ -209,7 +215,16 @@ class rb_source_ojt_completion extends rb_base_source {
                 'status',
                 get_string('completionstatus', 'rb_source_ojt_completion'),
                 'base.status',
-                array('displayfunc' => 'ojt_completion_status')
+                array(
+                        'displayfunc' => 'ojt_completion_status',
+                        // KINEO CCM
+                        'extrafields' => array(
+                            'userid' => 'base.userid',
+                            'courseid' => 'base.courseid',
+                            'ojtid' => 'base.ojtid'
+                        ),
+                        // KINEO CCM
+                    )
             ),
             new rb_column_option(
                 'base',
@@ -427,11 +442,20 @@ class rb_source_ojt_completion extends rb_base_source {
     //
 
     function rb_display_ojt_completion_status($status, $row, $isexport) {
-        if (empty($status)) {
-            return get_string('completionstatus'.OJT_INCOMPLETE, 'ojt');
-        } else {
-            return get_string('completionstatus'.$status, 'ojt');
+        // KINEO CCM - LOTHS-200
+        if(is_ojt_available($row->userid, $row->courseid, $row->ojtid)) {
+            if (empty($status)) {
+                if(is_ojt_in_progress($row->userid, $row->ojtid)) {
+                    return get_string('completionstatus'.OJT_INCOMPLETE, 'ojt');
+                }
+                return get_string('readyforevaluation','ojt');
+
+            } else {
+                return get_string('completionstatus'.$status, 'ojt');
+            }
+            return get_string('readyforevaluation','ojt');
         }
+        return get_string('notreadyforevaluation','ojt');
     }
 
     function rb_display_ojt_type($type, $row, $isexport) {
@@ -445,9 +469,10 @@ class rb_source_ojt_completion extends rb_base_source {
     }
 
     function rb_display_ojt_evaluate_link($ojtname, $row, $isexport) {
-        return html_writer::link(new moodle_url('/mod/ojt/evaluate.php',
-            array('userid' => $row->userid, 'bid' => $row->ojtid)), get_string('evaluate', 'rb_source_ojt_completion'));
-
+        if(is_ojt_available($row->userid, $row->courseid, $row->ojtid)) { // KINEO CCM
+            return html_writer::link(new moodle_url('/mod/ojt/evaluate.php',
+                array('userid' => $row->userid, 'bid' => $row->ojtid)), get_string('evaluate', 'rb_source_ojt_completion'));
+        }
     }
 
     function rb_display_ojt_topic_signedoff($signedoff, $row, $isexport) {

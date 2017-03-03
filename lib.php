@@ -594,3 +594,35 @@ function ojt_comment_template() {
     return $renderer->comment_template();
 }
 
+
+// BEGIN - KINEO CCM - LOTHS-200
+
+
+/**
+ * Check if activity has resctriction
+ * And if the activity is avaliable to the user
+ *
+ * @param type $row
+ * @return type
+ */
+function is_ojt_available($userid, $courseid, $ojtid) {
+    $course = get_course($courseid);
+    $modinfo = get_fast_modinfo($course);
+    $cm_instance = get_coursemodule_from_instance('ojt', $ojtid, $courseid, false, MUST_EXIST);
+    $cm = $modinfo->get_cm($cm_instance->id);
+    $info = new \core_availability\info_module($cm);
+    return $info->is_user_visible($cm, $userid, false);
+}
+
+function is_ojt_in_progress($userid, $ojtid) {
+    global $DB;
+    return $DB->get_records('ojt_completion',
+            array(
+                'userid' => $userid,
+                'ojtid' => $ojtid
+            )
+        );
+}
+
+// END - KINEO CCM
+

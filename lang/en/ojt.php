@@ -52,7 +52,7 @@ $string['competencies_help'] = 'Here you can select which of the assigned course
 
 Multiple competencies can be selected by holding down \<CTRL\> and and selecting the items.';
 $string['completionstatus'] = 'Completion status';
-$string['completionstatus0'] = 'Incomplete';
+$string['completionstatus0'] = 'In progress';
 $string['completionstatus1'] = 'Required complete';
 $string['completionstatus2'] = 'Complete';
 $string['completiontopics'] = 'All required topics are complete and, if enabled, witnessed.';
@@ -95,3 +95,7 @@ $string['type1'] = 'Topic';
 $string['type2'] = 'Item';
 $string['updatefiles'] = 'Update files';
 $string['witnessed'] = 'Witnessed';
+
+// LOTHS-200
+$string['notreadyforevaluation'] = 'Not ready for Evaluation';
+$string['readyforevaluation'] = 'Ready for Evaluation';
