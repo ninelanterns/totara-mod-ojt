@@ -99,3 +99,6 @@ $string['witnessed'] = 'Witnessed';
 // LOTHS-200
 $string['notreadyforevaluation'] = 'Not ready for Evaluation';
 $string['readyforevaluation'] = 'Ready for Evaluation';
+$string['notassessed'] = 'Not assessed';
+$string['notyetcompetent'] = 'Not yet competent';
+$string['competent'] = 'Competent';

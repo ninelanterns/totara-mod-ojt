@@ -46,6 +46,7 @@ define('OJT_CTYPE_TOPICITEM', 2);
 define('OJT_INCOMPLETE', 0);
 define('OJT_REQUIREDCOMPLETE', 1);
 define('OJT_COMPLETE', 2);
+define('OJT_NOT_COMPETENT', 3); // LOTHS-200 KINEO CCM
 
 /**
  * OJT completion requirements

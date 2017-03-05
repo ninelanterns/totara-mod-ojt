@@ -56,9 +56,11 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         var config = this.config;
 
         // Init ojt completion toggles.
-        $('.ojt-completion-toggle').on('click', function () {
+        // KINEO CCM: LOTHS-201
+        $('.ojt-completion-toggle').on('change', function () {
             var completionimg = this;
             var itemid = $(this).attr('ojt-item-id');
+            var completion_status = $(this).val();
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/evaluatesave.php',
                 type: 'POST',
@@ -66,18 +68,19 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     'action': 'togglecompletion',
                     'bid': config.ojtid,
                     'userid': config.userid,
-                    'id': itemid
+                    'id': itemid,
+                    'completion_status': completion_status
                 },
                 beforeSend: function() {
                     $(completionimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
                 },
                 success: function(data) {
                     var data = $.parseJSON(data);
-                    if (data.item.status == config.OJT_COMPLETE) {
-                        $(completionimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
-                    } else {
-                        $(completionimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
-                    }
+                    //if (data.item.status == config.OJT_COMPLETE) {
+                    //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
+                    //} else {
+                    //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
+                    //}
 
                     // Update the topic's completion too.
                     $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status').html($('#ojt-topic-status-icon-'+data.topic.status).clone());

@@ -33,6 +33,7 @@ $userid = required_param('userid', PARAM_INT);
 $ojtid  = required_param('bid', PARAM_INT);
 $itemid = required_param('id', PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
+$completion_status = required_param('completion_status', PARAM_INT);
 
 $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 $ojt  = $DB->get_record('ojt', array('id' => $ojtid), '*', MUST_EXIST);
@@ -64,7 +65,9 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
     // Update
     switch ($action) {
         case 'togglecompletion':
-            $completion->status = $completion->status == OJT_COMPLETE ? OJT_INCOMPLETE : OJT_COMPLETE;
+            // $completion->status = $completion->status == OJT_COMPLETE ? OJT_INCOMPLETE : OJT_COMPLETE;
+            // KINEO CCM : LOTHS-201
+            $completion->status = $completion_status;
             break;
         case 'savecomment':
             $completion->comment = required_param('comment', PARAM_TEXT);
@@ -81,7 +84,9 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
     $completion = (object)$params;
     switch ($action) {
         case 'togglecompletion':
-            $completion->status = OJT_COMPLETE;
+            // $completion->status = OJT_COMPLETE;
+            // KINEO CCM : LOTHS-201
+            $completion->status = $completion_status;
             break;
         case 'savecomment':
             $completion->comment = required_param('comment', PARAM_TEXT);

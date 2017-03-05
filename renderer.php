@@ -133,9 +133,19 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
                 $row[] = format_string($item->name).$optionalstr;
                 if ($evaluate) {
-                    $completionicon = $item->status == OJT_COMPLETE ? 'i/completion-manual-y' : 'i/completion-manual-n';
-                    $cellcontent = $this->output->pix_icon($completionicon, '', 'core',
-                        array('class' => 'ojt-completion-toggle', 'ojt-item-id' => $item->id));
+                    //$completionicon = $item->status == OJT_COMPLETE ? 'i/completion-manual-y' : 'i/completion-manual-n';
+                    //$cellcontent = $this->output->pix_icon($completionicon, '', 'core',
+                    //    array('class' => 'ojt-completion-toggle', 'ojt-item-id' => $item->id));
+
+                    // KINEO CCM : LOTHS-201
+                    $completion_options = array(
+                        OJT_INCOMPLETE => get_string('notassessed','ojt'),
+                        OJT_NOT_COMPETENT => get_string('notyetcompetent', 'ojt'),
+                        OJT_COMPLETE => get_string('competent','ojt')
+                    );
+                    $cellcontent = html_writer::select($completion_options, 'completion_status', $item->status, false, array('ojt-item-id' => $item->id, 'class' => 'ojt-completion-toggle'));
+                    // KINEO CCM
+
                     $cellcontent .= html_writer::tag('textarea', $item->comment,
                         array('name' => 'comment-'.$item->id, 'rows' => 3,
                             'class' => 'ojt-completion-comment', 'ojt-item-id' => $item->id));
@@ -146,10 +156,13 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     $cellcontent = '';
                     if ($item->status == OJT_COMPLETE) {
                         $cellcontent .= $this->output->pix_icon('i/grade_correct',
-                            get_string('completionstatus'.OJT_COMPLETE, 'ojt'));
+                            get_string('competent', 'ojt'));
+                    } else if($item->status == OJT_NOT_COMPETENT) {
+                        $cellcontent .= $this->output->pix_icon('i/grade_incorrect',
+                            get_string('notyetcompetent', 'ojt'));
                     } else {
                         $cellcontent .= $this->output->pix_icon('i/grade_incorrect',
-                            get_string('completionstatus'.OJT_INCOMPLETE, 'ojt'));
+                            get_string('notassessed', 'ojt'));
                     }
 
                     $cellcontent .= format_text($item->comment, FORMAT_PLAIN);
