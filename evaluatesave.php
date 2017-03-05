@@ -100,6 +100,9 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
     $completion->id = $DB->insert_record('ojt_completion', $completion);
 }
 
+$completion->badge_class = 'badge completionstatus'.$completion_status;
+$completion->badge_text = get_string('newcompletionstatus'.$completion_status,'ojt');
+
 $modifiedstr = ojt_get_modifiedstr($completion->timemodified);
 
 $jsonparams = array(

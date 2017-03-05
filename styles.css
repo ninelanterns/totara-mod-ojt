@@ -104,7 +104,45 @@ img.ojt-topic-completion-status {
     font-size: 0.8em;
 }
 
+/*
+    LOTTHS-200 ..
+    KINEO CCM
+*/
+.mod-ojt-topic .badge {
+    color: #ffffff;
+    border-radius: 6px;
+}
+.mod-ojt-topic-heading .mod-ojt-topic .badge.completionstatus0{
+    background-color: #337ab7;
+}
 
+.mod-ojt-topic .badge.completionstatus2,
+.mod-ojt-topic .badge.competent {
+    background-color: #5cb85c;
+}
+.mod-ojt-topic .badge.completionstatus3,
+.mod-ojt-topic .badge.notyetcompetent {
+    background-color: #d9534f;
+}
+.mod-ojt-topic .badge.completionstatus0,
+.mod-ojt-topic .badge.notassessed {
+    background-color: #777;
+}
+.mod-ojt-topic-signoff .badge {
+    margin-left: 10px;
+}
+.mod-ojt-topic-items .badge {
+    margin-right: 10px;
+}
+.mod-ojt-topic-heading .badge {
+    margin-left: 10px;
+}
+.mod-ojt-topic .badge.updating {
+    background-color: #f0ad4e;
+}
+select.ojt-completion-toggle {
+    margin-right: 10px;
+}
 /**
  * printing styles
  */

@@ -61,6 +61,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             var completionimg = this;
             var itemid = $(this).attr('ojt-item-id');
             var completion_status = $(this).val();
+            var badge = $('#ojt-badge-'+itemid);
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/evaluatesave.php',
                 type: 'POST',
@@ -72,15 +73,21 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     'completion_status': completion_status
                 },
                 beforeSend: function() {
-                    $(completionimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
+                    //$(completionimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
+                    badge.html('').removeClass().html('updating...').addClass('badge updating');
                 },
                 success: function(data) {
                     var data = $.parseJSON(data);
+                    // KINEO CCM
                     //if (data.item.status == config.OJT_COMPLETE) {
                     //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
                     //} else {
                     //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
                     //}
+
+                    // Update badge
+                    console.log(data);
+                    badge.html('').removeClass().html(data.item.badge_text).addClass(data.item.badge_class);
 
                     // Update the topic's completion too.
                     $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status').html($('#ojt-topic-status-icon-'+data.topic.status).clone());
