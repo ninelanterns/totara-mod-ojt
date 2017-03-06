@@ -89,7 +89,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
     }
 
     // Build a user's ojt form
-    function user_ojt($userojt, $evaluate=false, $signoff=false, $itemwitness=false) {
+    function user_ojt($userojt, $evaluate=false, $signoff=false, $itemwitness=false, $canevaluate = false) {
         global $CFG, $DB, $USER, $PAGE;
 
         $out = '';
@@ -111,19 +111,22 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     $completionicon = 'i/grade_incorrect';
             }
             if (!empty($completionicon)) {
-                //$completionicon = $this->output->pix_icon($completionicon, get_string('completionstatus'.$topic->status, 'ojt'));
                 // KINEO CCM
-                $completionicon = html_writer::span(get_string('completionstatus'.$topic->status, 'ojt'), 'badge completionstatus'.$topic->status);
+                $completion_status_text = is_ojt_in_progress($userojt->userid, $userojt->id)
+                        ? get_string('completionstatus'.$topic->status, 'ojt')
+                        : get_string('pendingassessment', 'ojt');
+                $completionicon = html_writer::span($completion_status_text, 'badge completionstatus'.$topic->status);
             }
-            $completionicon = html_writer::tag('span', $completionicon,
-                array('class' => 'ojt-topic-status'));
+            $completionicon = html_writer::tag('span', $completionicon, array('class' => 'ojt-topic-status'));
+
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ?
                 html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
             $out .= html_writer::tag('div', format_string($topic->name).$optionalstr.$completionicon,
-                array('class' => 'mod-ojt-topic-heading expanded'));
+                array('class' => 'mod-ojt-topic-heading '.($canevaluate ? 'collapsed' : 'expanded')));
 
             $table = new html_table();
             $table->attributes['class'] = 'mod-ojt-topic-items generaltable';
+            $table->attributes['style'] = ($canevaluate ? 'display:none' : '');
             if ($userojt->itemwitness) {
                 $table->head = array('', '', get_string('witnessed', 'mod_ojt'));
             }
@@ -135,10 +138,6 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
                 $row[] = format_string($item->name).$optionalstr;
                 if ($evaluate) {
-                    //$completionicon = $item->status == OJT_COMPLETE ? 'i/completion-manual-y' : 'i/completion-manual-n';
-                    //$cellcontent = $this->output->pix_icon($completionicon, '', 'core',
-                    //    array('class' => 'ojt-completion-toggle', 'ojt-item-id' => $item->id));
-
                     // KINEO CCM : LOTHS-201
                     $completion_options = array(
                         OJT_INCOMPLETE => get_string('newcompletionstatus'.OJT_INCOMPLETE,'ojt'),
@@ -160,19 +159,6 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     $cellcontent = '';
                     // KINEO CCM
                     $cellcontent .= html_writer::span(get_string('newcompletionstatus'.$item->status, 'ojt'), 'badge completionstatus'.$item->status);
-                    /**
-                    KINEO CCM
-                    if ($item->status == OJT_COMPLETE) {
-                        $cellcontent .= $this->output->pix_icon('i/grade_correct',
-                            get_string('competent', 'ojt'));
-                        $cellcontent .= html_writer::span(get_string('competent', 'ojt'), 'badge competent');
-                    } else {
-                        $cellcontent .= $this->output->pix_icon('i/grade_incorrect',
-                            get_string('notassessed', 'ojt'));
-                    }
-                     */
-
-
                     $cellcontent .= format_text($item->comment, FORMAT_PLAIN);
                 }
                 $userobj = new stdClass();
@@ -233,10 +219,8 @@ class mod_ojt_renderer extends plugin_renderer_base {
                 } else {
                     // KINEO CCM
                     if ($topic->signedoff) {
-                        //$out .= $this->output->pix_icon('i/grade_correct', get_string('signedoff', 'ojt'));
                         $out .= html_writer::span(get_string('signedoff', 'ojt'), 'badge competent');
                     } else {
-                        //$out .= $this->output->pix_icon('i/grade_incorrect', get_string('notsignedoff', 'ojt'));
                         $out .= html_writer::span(get_string('notsignedoff', 'ojt'), 'badge notassessed');
                     }
                 }

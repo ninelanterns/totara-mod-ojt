@@ -65,7 +65,6 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
     // Update
     switch ($action) {
         case 'togglecompletion':
-            // $completion->status = $completion->status == OJT_COMPLETE ? OJT_INCOMPLETE : OJT_COMPLETE;
             // KINEO CCM : LOTHS-201
             $completion->status = $completion_status;
             break;
@@ -84,7 +83,6 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
     $completion = (object)$params;
     switch ($action) {
         case 'togglecompletion':
-            // $completion->status = OJT_COMPLETE;
             // KINEO CCM : LOTHS-201
             $completion->status = $completion_status;
             break;

@@ -79,14 +79,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 success: function(data) {
                     var data = $.parseJSON(data);
                     // KINEO CCM
-                    //if (data.item.status == config.OJT_COMPLETE) {
-                    //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
-                    //} else {
-                    //    $(completionimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
-                    //}
-
                     // Update badge
-                    console.log(data);
                     badge.html('').removeClass().html(data.item.badge_text).addClass(data.item.badge_class);
 
                     // Update the topic's completion too.

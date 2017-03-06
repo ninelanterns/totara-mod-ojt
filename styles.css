@@ -67,8 +67,9 @@ img.ojt-topic-completion-status {
 }
 
 #mod-ojt-user-ojt textarea.ojt-completion-comment {
-    margin-left: 0.4em;
+    margin-left: 0;
     width: 90%;
+    margin-top: 10px;
 }
 
 #ojt-eval-icon-templates {
@@ -110,7 +111,16 @@ img.ojt-topic-completion-status {
 */
 .mod-ojt-topic .badge {
     color: #ffffff;
-    border-radius: 6px;
+    padding: 2px 9px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+    display: inline-block;
+    font-size: 11.844px;
+    font-weight: bold;
+    vertical-align: baseline;
+    white-space: nowrap;
+    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
 }
 .mod-ojt-topic-heading .mod-ojt-topic .badge.completionstatus0{
     background-color: #337ab7;

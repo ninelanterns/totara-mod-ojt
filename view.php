@@ -60,6 +60,7 @@ $event->trigger();
 $PAGE->set_url('/mod/ojt/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($ojt->name));
 $PAGE->set_heading(format_string($course->fullname));
+$PAGE->requires->css('/mod/ojt/styles.css');
 
 local_js();
 $jsmodule = array(
@@ -113,7 +114,7 @@ if ($ojt->intro) {
 }
 
 $renderer = $PAGE->get_renderer('ojt');
-echo $renderer->user_ojt($userojt);
+echo $renderer->user_ojt($userojt, false, false, false, $canevaluate);
 
 // Finish the page.
 echo $OUTPUT->footer();

@@ -102,3 +102,4 @@ $string['readyforevaluation'] = 'Ready for Evaluation';
 $string['newcompletionstatus0'] = 'Not assessed';
 $string['newcompletionstatus3'] = 'Not yet competent';
 $string['newcompletionstatus2'] = 'Competent';
+$string['pendingassessment'] = 'Pending assessment';

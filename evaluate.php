@@ -68,6 +68,7 @@ if (has_capability('mod/ojt:evaluate', $modcontext) || has_capability('mod/ojt:s
     $PAGE->navbar->add(get_string('evaluatestudents', 'ojt'), new moodle_url('/mod/ojt/report.php', array('cmid' => $cm->id)));
 }
 $PAGE->navbar->add(fullname($user));
+$PAGE->requires->css('/mod/ojt/styles.css');
 
 local_js();
 $args = array('args' => '{"ojtid":'.$userojt->id.
