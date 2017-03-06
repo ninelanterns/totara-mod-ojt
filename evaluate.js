@@ -81,9 +81,8 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     // KINEO CCM
                     // Update badge
                     badge.html('').removeClass().html(data.item.badge_text).addClass(data.item.badge_class);
-
                     // Update the topic's completion too.
-                    $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status').html($('#ojt-topic-status-icon-'+data.topic.status).clone());
+                    $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status span').html('').removeClass().html(data.topic.badge_text).addClass(data.topic.badge_class);
 
                     // Update modified string.
                     $('.mod-ojt-modifiedstr[ojt-item-id='+itemid+']').html(data.modifiedstr);

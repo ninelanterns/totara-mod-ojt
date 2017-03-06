@@ -109,6 +109,8 @@ function ojt_update_topic_completion($userid, $ojtid, $topicid) {
                 // Degrade status a bit
                 $status = OJT_REQUIREDCOMPLETE;
             }
+        } else if($item->status == OJT_NOT_COMPETENT) { // KINEO CCM
+            $status = OJT_INCOMPLETE;
         }
     }
 

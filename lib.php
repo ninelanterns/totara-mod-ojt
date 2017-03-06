@@ -615,14 +615,16 @@ function is_ojt_available($userid, $courseid, $ojtid) {
     return $info->is_user_visible($cm, $userid, false);
 }
 
-function is_ojt_in_progress($userid, $ojtid) {
+function is_ojt_in_progress($userid, $ojtid,$topicid = false) {
     global $DB;
-    return $DB->get_records('ojt_completion',
-            array(
+    $params = array(
                 'userid' => $userid,
                 'ojtid' => $ojtid
-            )
-        );
+            );
+    if($topicid) {
+        $params['topicid'] = $topicid; 
+    }
+    return $DB->get_records('ojt_completion', $params);
 }
 
 // END - KINEO CCM

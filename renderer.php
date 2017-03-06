@@ -112,10 +112,10 @@ class mod_ojt_renderer extends plugin_renderer_base {
             }
             if (!empty($completionicon)) {
                 // KINEO CCM
-                $completion_status_text = is_ojt_in_progress($userojt->userid, $userojt->id)
+                $completion_status_text = is_ojt_in_progress($userojt->userid, $userojt->id, $topic->id)
                         ? get_string('completionstatus'.$topic->status, 'ojt')
                         : get_string('pendingassessment', 'ojt');
-                $completionicon = html_writer::span($completion_status_text, 'badge completionstatus'.$topic->status);
+                $completionicon = html_writer::span($completion_status_text, 'badge completionstatus'.$topic->status, array('id' => 'ojt-topic'));
             }
             $completionicon = html_writer::tag('span', $completionicon, array('class' => 'ojt-topic-status'));
 

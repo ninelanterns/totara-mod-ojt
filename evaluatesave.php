@@ -109,7 +109,12 @@ $jsonparams = array(
 );
 if ($action == 'togglecompletion') {
     $topiccompletion = ojt_update_topic_completion($userid, $ojtid, $item->topicid);
+
+    // update badge
+    $topiccompletion->badge_class = 'badge completionstatus'.$topiccompletion->status;
+    $topiccompletion->badge_text = get_string('completionstatus'.$topiccompletion->status,'ojt');
     $jsonparams['topic'] = $topiccompletion;
+
 }
 
 echo json_encode($jsonparams);
