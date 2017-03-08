@@ -121,6 +121,8 @@ img.ojt-topic-completion-status {
     vertical-align: baseline;
     white-space: nowrap;
     text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
+    min-width: 146px;
+    text-align: center;
 }
 .mod-ojt-topic-heading .mod-ojt-topic .badge.completionstatus0{
     background-color: #337ab7;
@@ -141,11 +143,8 @@ img.ojt-topic-completion-status {
 .mod-ojt-topic-signoff .badge {
     margin-left: 10px;
 }
-.mod-ojt-topic-items .badge {
-    margin-right: 10px;
-}
-.mod-ojt-topic-heading .badge {
-    margin-left: 10px;
+.mod-ojt-topic .mod-ojt-topic-heading .badge.completionstatus0 {
+    background-color: #3e2d64;
 }
 .mod-ojt-topic .badge.updating {
     background-color: #f0ad4e;
@@ -155,6 +154,10 @@ select.ojt-completion-toggle {
 }
 #ojt-evaluate-submit-btn {
     float: right;
+}
+.mod-ojt-topic .badge {
+    margin-left: 10px;
+    margin-right: 10px;
 }
 /**
  * printing styles

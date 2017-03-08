@@ -16,4 +16,7 @@ defined('MOODLE_INTERNAL') || die;
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('ojt/hidetopicsfrommanager', get_string('confighidetopicsfrommanager', 'mod_ojt'),
                        get_string('confighidetopicsfrommanagerdesc', 'mod_ojt'), 0));
+
+    $settings->add(new admin_setting_configcheckbox('ojt/hidecommentbox', get_string('confighidecommentbox', 'mod_ojt'),
+                       get_string('confighidecommentboxdesc', 'mod_ojt'), 0));
 }

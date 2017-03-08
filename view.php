@@ -79,9 +79,11 @@ $cansignoff = has_capability('mod/ojt:signoff', $modcontext);
 // KINEO CCM
 // LOTHS-208
 $config = get_config('ojt');
-if($canevaluate && !empty($config) && $config->hidetopicsfrommanager) {
-    redirect(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',
-        array('cmid' => $cm->id)));
+if($canevaluate && !empty($config)) {
+    if(isset($config->hidetopicsfrommanager) && $config->hidetopicsfrommanager) {
+        redirect(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',
+            array('cmid' => $cm->id)));
+    }
 }
 
 

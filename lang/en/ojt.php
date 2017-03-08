@@ -107,3 +107,6 @@ $string['pendingassessment'] = 'Pending assessment';
 $string['confighidetopicsfrommanager'] = 'Hide topics from manager';
 $string['confighidetopicsfrommanagerdesc'] = 'When checked, evaluating managers will be redirected to <strong>OJT - Evaluate</strong> page instead of their own OJT topics page';
 $string['submit'] = 'Submit';
+// LOTHS-211
+$string['confighidecommentbox'] = 'Hide comment box';
+$string['confighidecommentboxdesc'] = 'When checked hides the comment textarea field on the evaluation page.';
