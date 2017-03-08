@@ -103,3 +103,6 @@ $string['newcompletionstatus0'] = 'Not assessed';
 $string['newcompletionstatus3'] = 'Not yet competent';
 $string['newcompletionstatus2'] = 'Competent';
 $string['pendingassessment'] = 'Pending assessment';
+// LOTHS-208
+$string['confighidetopicsfrommanager'] = 'Hide topics from manager';
+$string['confighidetopicsfrommanagerdesc'] = 'When checked, evaluating managers will be redirected to <strong>OJT - Evaluate</strong> page instead of their own OJT topics page';

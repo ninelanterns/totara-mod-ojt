@@ -76,6 +76,15 @@ $canevaluate = has_capability('mod/ojt:evaluate', $modcontext);
 $canevalself = has_capability('mod/ojt:evaluateself', $modcontext);
 $cansignoff = has_capability('mod/ojt:signoff', $modcontext);
 
+// KINEO CCM
+// LOTHS-208
+$config = get_config('ojt');
+if($canevaluate && !empty($config) && $config->hidetopicsfrommanager) {
+    redirect(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',
+        array('cmid' => $cm->id)));
+}
+
+
 if ($canevalself && !($canevaluate || $cansignoff)) {
     // Seeing as the user can only self-evaluate, but nothing else, redirect them straight to the eval page
     redirect(new moodle_url($CFG->wwwroot.'/mod/ojt/evaluate.php',
@@ -95,6 +104,8 @@ if (($canevaluate || $cansignoff)) {
 }
 
 $userojt = ojt_get_user_ojt($ojt->id, $USER->id);
+
+
 
 // "Evaluate self" button
 if ($canevalself) {
