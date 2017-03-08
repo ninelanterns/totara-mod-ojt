@@ -106,3 +106,4 @@ $string['pendingassessment'] = 'Pending assessment';
 // LOTHS-208
 $string['confighidetopicsfrommanager'] = 'Hide topics from manager';
 $string['confighidetopicsfrommanagerdesc'] = 'When checked, evaluating managers will be redirected to <strong>OJT - Evaluate</strong> page instead of their own OJT topics page';
+$string['submit'] = 'Submit';

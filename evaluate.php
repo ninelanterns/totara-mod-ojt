@@ -109,5 +109,9 @@ if ($ojt->intro) {
 $renderer = $PAGE->get_renderer('ojt');
 echo $renderer->user_ojt($userojt, $canevaluate, $cansignoff, $canwitness);
 
+// KINEO CCM
+// LOTHS-209
+echo html_writer::link(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',array('cmid' => $cm->id)), get_string('submit','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'link-as-button'));
+
 // Finish the page.
 echo $OUTPUT->footer();

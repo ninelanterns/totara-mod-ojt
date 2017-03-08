@@ -153,6 +153,9 @@ img.ojt-topic-completion-status {
 select.ojt-completion-toggle {
     margin-right: 10px;
 }
+#ojt-evaluate-submit-btn {
+    float: right;
+}
 /**
  * printing styles
  */
