@@ -64,6 +64,8 @@ M.mod_ojt_expandcollapse = M.mod_ojt_expandcollapse || {
                 topicheading.removeClass('collapsed').addClass('expanded');
             }
             $(this).next('.mod-ojt-topic-items').fadeToggle();
+            // KINEO CCM
+            $(this).siblings('.mod-ojt-topic-signoff').fadeToggle();
         });
 
     },  // init

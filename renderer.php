@@ -92,11 +92,18 @@ class mod_ojt_renderer extends plugin_renderer_base {
     function user_ojt($userojt, $evaluate=false, $signoff=false, $itemwitness=false, $canevaluate = false) {
         global $CFG, $DB, $USER, $PAGE;
 
+        // KINEO CCM
         $config = get_config('ojt');
         $hide_comment = false;
         if(!empty($config) && isset($config->hidecommentbox) && $config->hidecommentbox) {
             $hide_comment = true;
         }
+        $topics_collapsed = false;
+        if(!empty($config) && isset($config->topicsdefaultstate) && $config->topicsdefaultstate) {
+            $topics_collapsed = true;
+        }
+        // END KINEO CCM
+
         $out = '';
         $out = html_writer::start_tag('div', array('id' => 'mod-ojt-user-ojt'));
 
@@ -127,11 +134,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ?
                 html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
             $out .= html_writer::tag('div', $completionicon.format_string($topic->name).$optionalstr,
-                array('class' => 'mod-ojt-topic-heading '.($canevaluate ? 'collapsed' : 'expanded')));
+                array('class' => 'mod-ojt-topic-heading '.($topics_collapsed ? 'collapsed' : 'expanded')));
 
             $table = new html_table();
             $table->attributes['class'] = 'mod-ojt-topic-items generaltable';
-            $table->attributes['style'] = ($canevaluate ? 'display:none' : '');
+            $table->attributes['style'] = ($topics_collapsed ? 'display:none;' : '');
             if ($userojt->itemwitness) {
                 $table->head = array('', '', get_string('witnessed', 'mod_ojt'));
             }
@@ -222,7 +229,13 @@ class mod_ojt_renderer extends plugin_renderer_base {
 
             // Topic signoff
             if ($userojt->managersignoff) {
-                $out .= html_writer::start_tag('div', array('class' => 'mod-ojt-topic-signoff', 'ojt-topic-id' => $topic->id));
+                $out .= html_writer::start_tag('div',
+                            array(
+                                'class' => 'mod-ojt-topic-signoff',
+                                'ojt-topic-id' => $topic->id,
+                                'style' => ($topics_collapsed ? 'display:none;' : '') // KINEO CCM
+                            )
+                        );
                 $out .= get_string('managersignoff', 'ojt');
                 if ($signoff) {
                     $out .= $this->output->pix_icon($topic->signedoff ? 'i/completion-manual-y' : 'i/completion-manual-n', '', 'core',

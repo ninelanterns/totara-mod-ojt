@@ -19,4 +19,7 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('ojt/hidecommentbox', get_string('confighidecommentbox', 'mod_ojt'),
                        get_string('confighidecommentboxdesc', 'mod_ojt'), 0));
+
+    $settings->add(new admin_setting_configcheckbox('ojt/topicsdefaultstate', get_string('configtopicsdefaultstate', 'mod_ojt'),
+                       get_string('configtopicsdefaultstatedesc', 'mod_ojt'), 0));
 }

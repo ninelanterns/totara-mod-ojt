@@ -110,3 +110,5 @@ $string['submit'] = 'Submit';
 // LOTHS-211
 $string['confighidecommentbox'] = 'Hide comment box';
 $string['confighidecommentboxdesc'] = 'When checked hides the comment textarea field on the evaluation page.';
+$string['configtopicsdefaultstate'] = 'Collapse topics by default';
+$string['configtopicsdefaultstatedesc'] = 'When checked topics are collapsed, by default all topics are expanded';
