@@ -58,12 +58,22 @@ $topicsignoff->userid = $userid;
 $topicsignoff->topicid = $topic->id;
 $topicsignoff->timemodified = time();
 $topicsignoff->modifiedby = $USER->id;
+$alertcannotundo = false;
 
 if ($currentsignoff = $DB->get_record('ojt_topic_signoff', array('userid' => $userid, 'topicid' => $topicid))) {
-    // Update
-    $topicsignoff->id = $currentsignoff->id;
-    $topicsignoff->signedoff = !($currentsignoff->signedoff);
-    $DB->update_record('ojt_topic_signoff', $topicsignoff);
+    
+    // have capability to undo
+    if ($currentsignoff->signedoff == 0 || (has_capability('mod/ojt:unchecksignoff', context_module::instance($cm->id)))) {
+        // Update
+        $topicsignoff->id = $currentsignoff->id;
+        $topicsignoff->signedoff = !($currentsignoff->signedoff);
+        $DB->update_record('ojt_topic_signoff', $topicsignoff);
+    } else {
+        $alertcannotundo = true;
+        $topicsignoff->signedoff = 1;
+        $topicsignoff->timemodified = $currentsignoff->timemodified;
+    }
+        
 } else {
     // Insert
     $topicsignoff->signedoff = 1;
@@ -74,7 +84,8 @@ $modifiedstr = ojt_get_modifiedstr($topicsignoff->timemodified);
 
 $jsonparams = array(
     'topicsignoff' => $topicsignoff,
-    'modifiedstr' => $modifiedstr
+    'modifiedstr' => $modifiedstr,
+    'alertcannotundo' => $alertcannotundo
 );
 
 echo json_encode($jsonparams);

@@ -82,6 +82,7 @@ $jsmodule = array(
     'requires' => array('json')
 );
 $PAGE->requires->js_init_call('M.mod_ojt_evaluate.init', $args, false, $jsmodule);
+$PAGE->requires->string_for_js('alertcannotundo', 'mod_ojt');
 $jsmodule = array(
     'name' => 'mod_ojt_expandcollapse',
     'fullpath' => '/mod/ojt/expandcollapse.js',

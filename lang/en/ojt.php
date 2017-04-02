@@ -42,6 +42,7 @@ $string['ojt:manage'] = 'Manage';
 $string['ojt:view'] = 'View';
 $string['ojt:signoff'] = 'Sign-off';
 $string['ojt:witnessitem'] = 'Witness topic item completion';
+$string['ojt:unchecksignoff'] = 'Uncheck the sign-off checkbox after it has already been submitted';
 $string['ojtfieldset'] = 'Custom example fieldset';
 $string['ojtname'] = 'OJT name';
 $string['ojtname_help'] = 'The title of your OJT activity.';
@@ -112,3 +113,5 @@ $string['confighidecommentbox'] = 'Hide comment box';
 $string['confighidecommentboxdesc'] = 'When checked hides the comment textarea field on the evaluation page.';
 $string['configtopicsdefaultstate'] = 'Collapse topics by default';
 $string['configtopicsdefaultstatedesc'] = 'When checked topics are collapsed, by default all topics are expanded';
+
+$string['alertcannotundo'] = 'No capability to undo sign-off. If required, please contact the Administrator';

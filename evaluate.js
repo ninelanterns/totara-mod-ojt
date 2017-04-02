@@ -188,6 +188,10 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     }
 
                     $('.mod-ojt-topic-signoff[ojt-topic-id='+topicid+'] .mod-ojt-topic-modifiedstr').html(data.modifiedstr);
+                    
+                    if (data.alertcannotundo) {
+                        alert(M.util.get_string('alertcannotundo', 'mod_ojt'));
+                    }
                 },
                 error: function (data) {
                     console.log(data);

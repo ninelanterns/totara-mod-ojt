@@ -115,4 +115,12 @@ $capabilities = array(
             'manager' => CAP_ALLOW
         )
     ),
+    'mod/ojt:unchecksignoff' => array(
+        'riskbitmask' => RISK_SPAM,
+        'captype' => 'write',
+        'contextlevel' => CONTEXT_MODULE,
+        'legacy' => array(
+            
+        )
+    ),
 );
