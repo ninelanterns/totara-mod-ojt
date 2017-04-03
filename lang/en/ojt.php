@@ -57,6 +57,7 @@ $string['completionstatus0'] = 'In progress';
 $string['completionstatus1'] = 'Required complete';
 $string['completionstatus2'] = 'Complete';
 $string['completiontopics'] = 'All required topics are complete and, if enabled, witnessed.';
+$string['completionmanagersignoff'] = 'All required topics are signed off by the manager.';
 $string['confirmtopicdelete'] = 'Are you sure you want to delete this topic?';
 $string['confirmitemdelete'] = 'Are you sure you want to delete this topic item?';
 $string['deleteitem'] = 'Delete topic item';

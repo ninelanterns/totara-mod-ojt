@@ -99,26 +99,54 @@ function ojt_update_topic_completion($userid, $ojtid, $topicid) {
     $items = $DB->get_records_sql($sql, array($ojtid, OJT_CTYPE_TOPICITEM, $userid, $topicid));
 
     $status = OJT_COMPLETE;
+    $topicstatus = OJT_COMPLETE;
+    $managersignoff = OJT_COMPLETE;
     foreach ($items as $item) {
         if ($item->status == OJT_INCOMPLETE) {
             if ($item->completionreq == OJT_REQUIRED) {
                 // All required items not complete - bail!
-                $status = OJT_INCOMPLETE;
+                $topicstatus = OJT_INCOMPLETE;
                 break;
             } else if ($item->completionreq == OJT_OPTIONAL) {
                 // Degrade status a bit
-                $status = OJT_REQUIREDCOMPLETE;
+                $topicstatus = OJT_REQUIREDCOMPLETE;
             }
         } else if($item->status == OJT_NOT_COMPETENT) { // KINEO CCM
-            $status = OJT_INCOMPLETE;
+            $topicstatus = OJT_INCOMPLETE;
         }
     }
 
-    if (in_array($status, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))
+    if (in_array($topicstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))
             && $ojt->itemwitness && !ojt_topic_items_witnessed($topicid, $userid)) {
 
         // All required items must also be witnessed - degrade status
-        $status = OJT_INCOMPLETE;
+        $topicstatus = OJT_INCOMPLETE;
+    }
+    
+    if (!empty($ojt->completionmanagersignoff)) {
+        $has_incomplete_compulsory = $DB->record_exists_sql('
+            SELECT ojt.id
+              FROM {ojt} ojt
+              JOIN {ojt_topic} topic
+                ON (topic.ojtid = ojt.id)
+         LEFT JOIN {ojt_topic_signoff} signoff
+                ON (signoff.topicid = topic.id AND signedoff = 1 AND signoff.userid = :userid)
+             WHERE signoff.id IS NULL
+               AND ojt.id = :ojtid
+               AND topic.completionreq = 0
+            ', array('ojtid' => $ojt->id, 'userid' => $userid));
+        
+        if (!empty($has_incomplete_compulsory)) {
+            $managersignoff = OJT_INCOMPLETE;
+        }
+    }
+    
+    if (!empty($ojt->completiontopics) && !empty($ojt->completionmanagersignoff)) {
+        $status = $topicstatus && $managersignoff;
+    } else if (!empty($ojt->completionmanagersignoff)) {
+        $status = $managersignoff;
+    } else {
+        $status = $topicstatus;
     }
 
     $currentcompletion = $DB->get_record('ojt_completion',
@@ -265,15 +293,33 @@ function ojt_update_completion($userid, $ojtid) {
 
 function ojt_update_activity_completion($ojtid, $userid, $ojtstatus) {
     global $DB;
-
+    
+    $issignedoff = true;
+    
+    if (!empty($ojt->completionmanagersignoff)) {
+        $has_incomplete_compulsory = $DB->record_exists_sql('
+            SELECT ojt.id
+              FROM {ojt} ojt
+              JOIN {ojt_topic} topic
+                ON (topic.ojtid = ojt.id)
+         LEFT JOIN {ojt_topic_signoff} signoff
+                ON (signoff.topicid = topic.id AND signedoff = 1 AND signoff.userid = :userid)
+             WHERE signoff.id IS NULL
+               AND ojt.id = :ojtid
+               AND topic.completionreq = 0
+            ', array('ojtid' => $ojt->id, 'userid' => $userid));
+        
+        $issignedoff = empty($has_incomplete_compulsory);
+    }
+    
     $ojt = $DB->get_record('ojt', array('id' => $ojtid), '*', MUST_EXIST);
-    if ($ojt->completiontopics) {
+    if ($ojt->completiontopics || $ojt->completionmanagersignoff) {
         $course = $DB->get_record('course', array('id' => $ojt->course), '*', MUST_EXIST);
 
         $cm = get_coursemodule_from_instance('ojt', $ojt->id, $ojt->course, false, MUST_EXIST);
         $ccompletion = new completion_info($course);
         if ($ccompletion->is_enabled($cm)) {
-            if (in_array($ojtstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))) {
+            if (in_array($ojtstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE)) && $issignedoff) {
                 $ccompletion->update_state($cm, COMPLETION_COMPLETE, $userid);
             } else {
                 $ccompletion->update_state($cm, COMPLETION_INCOMPLETE, $userid);

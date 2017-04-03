@@ -59,6 +59,22 @@ function xmldb_ojt_upgrade($oldversion) {
         // ojt savepoint reached.
         upgrade_mod_savepoint(true, 2016031400, 'ojt');
     }
+    
+    if ($oldversion < 2016031402) {
+
+        // Define field completionmanagersignoff to be added to ojt.
+        $table = new xmldb_table('ojt');
+        $field = new xmldb_field('completionmanagersignoff', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'completiontopics');
+
+        // Conditionally launch add field completionmanagersignoff.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2016031402, 'ojt');
+    }
+
 
 
     return true;

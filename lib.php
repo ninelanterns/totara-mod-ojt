@@ -228,6 +228,10 @@ function ojt_get_completion_requirements($cm) {
     if ($ojt->completiontopics) {
         $result[] = get_string('completiontopics', 'ojt');
     }
+    
+    if ($ojt->completionmanagersignoff) {
+        $result[] = get_string('completionmanagersignoff', 'ojt');
+    }
 
     return $result;
 }
@@ -255,6 +259,24 @@ function ojt_get_completion_progress($cm, $userid) {
             $result[] = get_string('completiontopics', 'ojt');
         }
     }
+    
+    if ($ojt->completionmanagersignoff) {
+        $has_incomplete_compulsory = $DB->record_exists_sql('
+            SELECT ojt.id
+              FROM {ojt} ojt
+              JOIN {ojt_topic} topic
+                ON (topic.ojtid = ojt.id)
+         LEFT JOIN {ojt_topic_signoff} signoff
+                ON (signoff.topicid = topic.id AND signedoff = 1 AND signoff.userid = :userid)
+             WHERE signoff.id IS NULL
+               AND ojt.id = :ojtid
+               AND topic.completionreq = 0
+            ', array('ojtid' => $ojt->id, 'userid' => $userid));
+        
+        if (empty($has_incomplete_compulsory)) {
+            $result[] = get_string('completionmanagersignoff', 'ojt');
+        }
+    }
 
     return $result;
 }
@@ -278,14 +300,36 @@ function ojt_get_completion_state($course, $cm, $userid, $type) {
     $ojt = $DB->get_record('ojt', array('id' => $cm->instance), '*', MUST_EXIST);
 
     // This means that if only view is required we don't end up with a false state.
-    if (empty($ojt->completiontopics)) {
+    if (empty($ojt->completiontopics) && empty($ojt->completionmanagersignoff)) {
         return $type;
     }
-
-    return $DB->record_exists_select('ojt_completion',
-        'ojtid = ? AND userid =? AND type = ? AND status IN (?, ?)',
-        array($ojt->id, $userid, OJT_CTYPE_OJT, OJT_COMPLETE, OJT_REQUIREDCOMPLETE));
-
+    
+    $completiontopics = true;
+    $completionmanagersignoff = true;
+    
+    if (!empty($ojt->completiontopics)) {
+        $completiontopics = $DB->record_exists_select('ojt_completion',
+            'ojtid = ? AND userid =? AND type = ? AND status IN (?, ?)',
+            array($ojt->id, $userid, OJT_CTYPE_OJT, OJT_COMPLETE, OJT_REQUIREDCOMPLETE));
+    }
+    
+    if (!empty($ojt->completionmanagersignoff)) {
+        $has_incomplete_compulsory = $DB->record_exists_sql('
+            SELECT ojt.id
+              FROM {ojt} ojt
+              JOIN {ojt_topic} topic
+                ON (topic.ojtid = ojt.id)
+         LEFT JOIN {ojt_topic_signoff} signoff
+                ON (signoff.topicid = topic.id AND signedoff = 1 AND signoff.userid = :userid)
+             WHERE signoff.id IS NULL
+               AND ojt.id = :ojtid
+               AND topic.completionreq = 0
+            ', array('ojtid' => $ojt->id, 'userid' => $userid));
+        
+        $completionmanagersignoff = empty($has_incomplete_compulsory);
+    }
+    
+    return ($completiontopics && $completionmanagersignoff);
 }
 
 

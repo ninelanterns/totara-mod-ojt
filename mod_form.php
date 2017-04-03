@@ -78,11 +78,13 @@ class mod_ojt_mod_form extends moodleform_mod {
         $mform =& $this->_form;
 
         $mform->addElement('advcheckbox', 'completiontopics', '', get_string('completiontopics', 'ojt'));
-        return array('completiontopics');
+        $mform->addElement('advcheckbox', 'completionmanagersignoff', '', get_string('completionmanagersignoff', 'ojt'));
+        
+        return array('completiontopics', 'completionmanagersignoff');
     }
 
     function completion_rule_enabled($data) {
-        return !empty($data['completiontopics']);
+        return !empty($data['completiontopics']) || !empty($data['completionmanagersignoff']);
     }
 
 }

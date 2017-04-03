@@ -88,4 +88,6 @@ $jsonparams = array(
     'alertcannotundo' => $alertcannotundo
 );
 
+ojt_update_topic_completion($userid, $ojtid, $topic->id);
+
 echo json_encode($jsonparams);
