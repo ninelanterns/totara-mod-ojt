@@ -33,7 +33,7 @@ $userid = required_param('userid', PARAM_INT);
 $ojtid  = required_param('bid', PARAM_INT);
 $itemid = required_param('id', PARAM_INT);
 $action = required_param('action', PARAM_TEXT);
-$completion_status = required_param('completion_status', PARAM_INT);
+$completion_status = optional_param('completion_status', '',PARAM_INT);
 
 $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 $ojt  = $DB->get_record('ojt', array('id' => $ojtid), '*', MUST_EXIST);
