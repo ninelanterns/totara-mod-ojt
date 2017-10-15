@@ -116,3 +116,6 @@ $string['configtopicsdefaultstate'] = 'Collapse topics by default';
 $string['configtopicsdefaultstatedesc'] = 'When checked topics are collapsed, by default all topics are expanded';
 
 $string['alertcannotundo'] = 'No capability to undo sign-off. If required, please contact the Administrator';
+// ALDHAS-207
+$string['configrolestoincludeinreport'] = 'Roles to include in the OJT evaluate report';
+$string['configrolestoincludeinreportdesc'] = 'Enter a comma separated list of roles (shortname) to be included in the evaluate report for OJT. If this is left empty, all the enrolled users will be shown (Default behavour).';

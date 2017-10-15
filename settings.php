@@ -22,4 +22,8 @@ if ($ADMIN->fulltree) {
 
     $settings->add(new admin_setting_configcheckbox('ojt/topicsdefaultstate', get_string('configtopicsdefaultstate', 'mod_ojt'),
                        get_string('configtopicsdefaultstatedesc', 'mod_ojt'), 0));
+    
+    // ALDHAS-207
+    $settings->add(new admin_setting_configtext('ojt/rolestoincludeinreport', get_string('configrolestoincludeinreport', 'mod_ojt'),
+                        get_string('configrolestoincludeinreportdesc', 'mod_ojt'),'', PARAM_TEXT));
 }

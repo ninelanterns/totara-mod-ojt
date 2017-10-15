@@ -30,6 +30,24 @@ class rb_source_ojt_completion extends rb_base_source {
     function __construct() {
         global $CFG, $DB;
         require_once($CFG->dirroot.'/mod/ojt/lib.php');
+        
+        // ALDHAS-207
+        $config = get_config('ojt', 'rolestoincludeinreport');
+        $rolesfilter = '';
+        if(!empty($config)) {
+            $accepted_roles_arr = explode(',', $config);
+            $accepted_roles_arr = array_map('trim', $accepted_roles_arr);
+            $stringForIN = "'" . implode("','", $accepted_roles_arr) . "'";
+            
+            $rolesfilter = "JOIN {role_assignments} ra 
+                ON ra.userid = ue.userid 
+              JOIN {role} r 
+                ON ra.roleid = r.id 
+                AND r.shortname IN ($stringForIN) 
+              JOIN {context} con 
+                ON ra.contextid = con.id AND ue.courseid = con.instanceid AND con.contextlevel = ". CONTEXT_COURSE ."
+                ";
+        }
 
         $this->base = "(
             SELECT ".$DB->sql_concat('ub.courseid', "'-'", 'ub.userid', "'-'", 'ub.ojtid', "'-'", 'ub.topicid', "'-'", 'ub.type')." AS id,
@@ -40,7 +58,8 @@ class rb_source_ojt_completion extends rb_base_source {
                     (SELECT distinct courseid, userid
                     FROM {enrol} e
                     JOIN {user_enrolments} ue ON e.id = ue.enrolid) ue
-                JOIN {ojt} b ON ue.courseid = b.course)
+                JOIN {ojt} b ON ue.courseid = b.course ".
+                $rolesfilter .")
                 UNION
                 (SELECT ue.courseid, ue.userid, b.id AS ojtid, t.id AS topicid,".OJT_CTYPE_TOPIC." AS type
                 FROM
@@ -48,7 +67,8 @@ class rb_source_ojt_completion extends rb_base_source {
                     FROM {enrol} e
                     JOIN {user_enrolments} ue ON e.id = ue.enrolid) ue
                 JOIN {ojt} b ON ue.courseid = b.course
-                JOIN {ojt_topic} t ON b.id = t.ojtid)
+                JOIN {ojt_topic} t ON b.id = t.ojtid ".
+                $rolesfilter .")
             ) AS ub
             LEFT JOIN {ojt_completion} bc
                 ON bc.userid = ub.userid
