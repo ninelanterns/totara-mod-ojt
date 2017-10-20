@@ -516,10 +516,11 @@ function ojt_pluginfile($course, $cm, $context, $filearea, array $args, $forcedo
         return false;
     }
 
-    $fs = get_file_storage();
-    $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/mod_ojt/$filearea/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+    $fs = get_file_storage();  
+    $filename = array_pop($args);
+    $filepath = array_shift($args) ? '/'.implode('/', array_shift($args)).'/' : '/';
+
+    if (!$file = $fs->get_file($context->id, 'mod_ojt', $filearea, $userid, $filepath, $filename) or $file->is_directory()) {
         send_file_not_found();
     }
 
