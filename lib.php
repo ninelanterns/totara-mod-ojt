@@ -470,13 +470,19 @@ function ojt_pluginfile($course, $cm, $context, $filearea, array $args, $forcedo
         // Only evaluators and/or owners have access to files
         return false;
     }
-
+  
+    // BEGIN - KINEO CORE MODIFICATION
+    // MPIHAS-369 
     $fs = get_file_storage();
-    $relativepath = implode('/', $args);
-    $fullpath = "/$context->id/mod_ojt/$filearea/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) || $file->is_directory()) {
+
+    $filename = array_pop($args);
+    $itemid = array_shift($args);
+    $filepath = array_shift($args) ? '/'.implode('/', array_shift($args)).'/' : '/';
+
+    if (!$file = $fs->get_file($context->id, 'mod_ojt', $filearea, $itemid, $filepath, $filename) or $file->is_directory()) {
         send_file_not_found();
     }
+    // END - KINEO CORE MODIFICATION 
 
     // finally send the file
     send_stored_file($file, null, 0, $forcedownload, $options);
