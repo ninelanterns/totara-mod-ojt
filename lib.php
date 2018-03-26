@@ -47,6 +47,7 @@ define('OJT_INCOMPLETE', 0);
 define('OJT_REQUIREDCOMPLETE', 1);
 define('OJT_COMPLETE', 2);
 define('OJT_NOT_COMPETENT', 3); // LOTHS-200 KINEO CCM
+define('OJT_READY_EVALUATION', 4); // ALDHAS-291 Adding filter for Ready Evaluation Status
 
 /**
  * OJT completion requirements
