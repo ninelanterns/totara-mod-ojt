@@ -51,7 +51,7 @@ class rb_source_ojt_completion extends rb_base_source {
 
         $this->base = "(
             SELECT ".$DB->sql_concat('ub.courseid', "'-'", 'ub.userid', "'-'", 'ub.ojtid', "'-'", 'ub.topicid', "'-'", 'ub.type')." AS id,
-            ub.courseid, ub.userid, ub.ojtid, ub.topicid, ub.type, case when bc.status IS NULL THEN 4 ELSE bc.status END, bc.timemodified, bc.modifiedby
+            ub.courseid, ub.userid, ub.ojtid, ub.topicid, ub.type, case when bc.status IS NULL THEN 4 ELSE bc.status END AS status, bc.timemodified, bc.modifiedby
             FROM (
                 (SELECT ue.courseid, ue.userid, b.id AS ojtid, 0 AS topicid,".OJT_CTYPE_OJT." AS type
                 FROM
