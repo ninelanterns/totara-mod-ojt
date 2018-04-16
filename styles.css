@@ -105,59 +105,30 @@ img.ojt-topic-completion-status {
     font-size: 0.8em;
 }
 
-/*
-    LOTTHS-200 ..
-    KINEO CCM
-*/
-.mod-ojt-topic .badge {
-    color: #ffffff;
-    padding: 2px 9px;
-    -webkit-border-radius: 9px;
-    -moz-border-radius: 9px;
-    border-radius: 9px;
-    display: inline-block;
-    font-size: 11.844px;
-    font-weight: bold;
-    vertical-align: baseline;
-    white-space: nowrap;
-    text-shadow: 0 -1px 0 rgba(0,0,0,0.25);
-    min-width: 146px;
-    text-align: center;
+/**
+ * MPIHAS-384
+ */
+#config-mod-ojt-topics .config-mod-ojt-topic-items.ui-sortable .config-mod-ojt-topic-item.ui-sortable-handle {
+    cursor: n-resize;
+    border: 1px dashed #d2d2d2;
+    margin-bottom: 4px;
+} 
+#config-mod-ojt-topics .config-mod-ojt-topic-items.ui-sortable .config-mod-ojt-topic-item.ui-sortable-handle.ui-sortable-helper {
+    border-style: solid;
+    background-color: #d2d2d2;
 }
-.mod-ojt-topic-heading .mod-ojt-topic .badge.completionstatus0{
-    background-color: #337ab7;
+.config-mod-ojt-topic-heading {
+    margin-bottom: 0.6em;
 }
-
-.mod-ojt-topic .badge.completionstatus2,
-.mod-ojt-topic .badge.competent {
-    background-color: #5cb85c;
+.sortbutton-container {
+    text-align: right;
 }
-.mod-ojt-topic .badge.completionstatus3,
-.mod-ojt-topic .badge.notyetcompetent {
-    background-color: #d9534f;
-}
-.mod-ojt-topic .badge.completionstatus0,
-.mod-ojt-topic .badge.notassessed {
-    background-color: #777;
-}
-.mod-ojt-topic-signoff .badge {
-    margin-left: 10px;
-}
-.mod-ojt-topic .mod-ojt-topic-heading .badge.completionstatus0 {
-    background-color: #3e2d64;
-}
-.mod-ojt-topic .badge.updating {
-    background-color: #f0ad4e;
-}
-select.ojt-completion-toggle {
-    margin-right: 10px;
-}
-#ojt-evaluate-submit-btn {
-    float: right;
-}
-.mod-ojt-topic .badge {
-    margin-left: 10px;
-    margin-right: 10px;
+.ojt-sort-loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    background-color: rgba(0,0,0,0.7);
 }
 /**
  * printing styles

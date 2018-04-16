@@ -60,12 +60,27 @@ function xmldb_ojt_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016031400, 'ojt');
     }
     
-    if ($oldversion < 2016031402) {
+    // MPIHAS-384
+    // Add sort position
+    if ($oldversion < 2017011101) {
+        $table = new xmldb_table('ojt_topic_item');
 
+        // Define field allowselffileuploads to be added to ojt_topic_item.
+        $field = new xmldb_field('position', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'allowselffileuploads');
+
+        // Conditionally launch add field allowselffileuploads.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011101, 'ojt');
+    }
+
+    if ($oldversion < 2016031402) {
         // Define field completionmanagersignoff to be added to ojt.
         $table = new xmldb_table('ojt');
-        $field = new xmldb_field('completionmanagersignoff', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'completiontopics');
-
+        $field = new xmldb_field('completionmanagersignoff', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'completiontopics');    
         // Conditionally launch add field completionmanagersignoff.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);

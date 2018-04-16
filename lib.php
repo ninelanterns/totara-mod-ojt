@@ -643,10 +643,29 @@ function ojt_comment_template() {
     return $renderer->comment_template();
 }
 
+// MPIHAS-384
+/**
+ * A centralised function to get topic items so that we can display them according to their sort position 
+ * 
+ * @global type $DB
+ * @param type $topicid
+ * @return object topic items
+ */
+function ojt_get_topic_items($topicid) {
+    global $DB;
+    
+    $items_sql = "SELECT * 
+                    FROM {ojt_topic_item} 
+                   WHERE topicid = :topicid 
+                ORDER BY position ASC
+                ";
+    $items = $DB->get_records_sql($items_sql, array('topicid' => $topicid));
+    
+    return $items;
+}
+
 
 // BEGIN - KINEO CCM - LOTHS-200
-
-
 /**
  * Check if activity has resctriction
  * And if the activity is avaliable to the user

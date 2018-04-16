@@ -46,6 +46,14 @@ $PAGE->set_url('/mod/ojt/view.php', array('id' => $cm->id));
 $PAGE->set_title(format_string($course->fullname));
 $PAGE->set_heading(format_string($ojt->name).' - '.get_string('manage', 'ojt'));
 
+// jQuery UI for Sorting
+$PAGE->requires->js('/mod/ojt/js_libs/jquery-ui.min.js', true);
+$jsmodule = array(
+    'name' => 'mod_ojt_evaluate',
+    'fullpath' => '/mod/ojt/sorttopics.js'
+);
+$PAGE->requires->js_init_call('M.mod_ojt_sorttopics.init', array(), false, $jsmodule);
+
 // Output starts here.
 echo $OUTPUT->header();
 
