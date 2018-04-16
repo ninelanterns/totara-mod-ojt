@@ -60,7 +60,7 @@ function ojt_get_user_ojt($ojtid, $userid) {
         LEFT JOIN {ojt_item_witness} bw ON bw.topicitemid = i.id AND bw.userid = ?
         LEFT JOIN {user} witnessuser ON bw.witnessedby = witnessuser.id
         WHERE i.topicid {$insql}
-        ORDER BY i.topicid, i.id";
+        ORDER BY i.topicid, i.position"; // KINEO CCM => from i.id to i.position
     $params = array_merge(array(OJT_CTYPE_TOPICITEM, $userid, $userid), $params);
     $items = $DB->get_records_sql($sql, $params);
 

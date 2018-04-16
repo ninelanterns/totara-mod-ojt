@@ -104,7 +104,31 @@ img.ojt-topic-completion-status {
     font-size: 0.8em;
 }
 
-
+/**
+ * MPIHAS-384
+ */
+#config-mod-ojt-topics .config-mod-ojt-topic-items.ui-sortable .config-mod-ojt-topic-item.ui-sortable-handle {
+    cursor: n-resize;
+    border: 1px dashed #d2d2d2;
+    margin-bottom: 4px;
+} 
+#config-mod-ojt-topics .config-mod-ojt-topic-items.ui-sortable .config-mod-ojt-topic-item.ui-sortable-handle.ui-sortable-helper {
+    border-style: solid;
+    background-color: #d2d2d2;
+}
+.config-mod-ojt-topic-heading {
+    margin-bottom: 0.6em;
+}
+.sortbutton-container {
+    text-align: right;
+}
+.ojt-sort-loading {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top:0;
+    background-color: rgba(0,0,0,0.7);
+}
 /**
  * printing styles
  */

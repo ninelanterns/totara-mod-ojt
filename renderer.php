@@ -68,11 +68,33 @@ class mod_ojt_renderer extends plugin_renderer_base {
 
         $out = '';
 
-        $items = $DB->get_records('ojt_topic_item', array('topicid' => $topicid), 'id');
-
-        $out .= html_writer::start_tag('div', array('class' => 'config-mod-ojt-topic-items'));
+        // KINEO CCM
+        // get sorted records
+        //$items = $DB->get_records('ojt_topic_item', array('topicid' => $topicid), 'id');
+        $items = ojt_get_topic_items($topicid);
+        
+        // MPIHAS-384 - Sort Form
+        $out .= html_writer::start_tag('form', array('id' => 'ojt-topic-items-sort-form-'.$topicid));
+        $out .= html_writer::tag('input', null, 
+                    array(
+                        'name' => 'topicid', 
+                        'value' => $topicid, 
+                        'type' => 'hidden'
+                        )
+                    );
+        
+        $out .= html_writer::start_tag('div', array('class' => 'config-mod-ojt-topic-items'));        
         foreach ($items as $item) {
             $out .= html_writer::start_tag('div', array('class' => 'config-mod-ojt-topic-item'));
+            // KINEO CCM
+            $out .= html_writer::tag('input', null, 
+                    array(
+                        'name' => 'topic_items_ids[]', 
+                        'value' => $item->id, 
+                        'type' => 'hidden'
+                        )
+                    );
+            
             $optionalstr = $item->completionreq == OJT_OPTIONAL ? ' ('.get_string('optional', 'ojt').')' : '';
             $out .= format_string($item->name).$optionalstr;
             if ($config) {
@@ -86,7 +108,19 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $out .= html_writer::end_tag('div');
         }
         $out .= html_writer::end_tag('div');
-
+        
+        // KINEO CCM 
+        $sort_button = html_writer::tag('button', get_string('sorttopicitems', 'mod_ojt'), 
+                array(
+                        'type' => 'button', 
+                        'class' => 'btn-sort-topic-items',
+                        'data-topicid' => $topicid
+                    )
+                );
+        $out .= html_writer::div($sort_button, 'sortbutton-container');
+        // close Sort Form ojt-topic-items-sort-form
+        $out .= html_writer::end_tag('form');
+        
         return $out;
     }
 

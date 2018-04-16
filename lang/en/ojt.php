@@ -95,3 +95,6 @@ $string['type1'] = 'Topic';
 $string['type2'] = 'Item';
 $string['updatefiles'] = 'Update files';
 $string['witnessed'] = 'Witnessed';
+// MPIHAS-384
+$string['sorttopicitems'] = 'Sort topic items';
+$string['positionupdate_successful'] = 'Position update successfully';
