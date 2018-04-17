@@ -125,6 +125,7 @@ $string['submit'] = 'Evaluate other students';
 $string['backbutton'] = 'Back to course';
 
 // MPIHAS-384
+$string['sorttopicitems'] = 'Save Topic Order';
 $string['btn_sorttopicitems'] = 'Save Topic Item Order';
 $string['positionupdate_successful'] = 'Position update successfully';
 $string['btn_sorttopic'] = 'Save Topic Order';
