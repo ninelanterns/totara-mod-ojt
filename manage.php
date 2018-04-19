@@ -61,6 +61,11 @@ echo $OUTPUT->header();
 echo $OUTPUT->heading($PAGE->heading);
 
 $addtopicurl = new moodle_url('/mod/ojt/topic.php', array('bid' => $ojt->id));
+
+// KINEO CCM
+// MPIHAS-384
+echo html_writer::tag('button', get_string('btn_updatetopic_order', 'mod_ojt'), array('id' => 'update-ojt-topics-order'));
+
 echo html_writer::tag('div', $OUTPUT->single_button($addtopicurl, get_string('addtopic', 'ojt')),
     array('class' => 'mod-ojt-topic-addbtn'));
 

@@ -61,20 +61,38 @@ function xmldb_ojt_upgrade($oldversion) {
     }
     
     // MPIHAS-384
-    // Add sort position
+    // Add sort position to topics items
     if ($oldversion < 2017011101) {
         $table = new xmldb_table('ojt_topic_item');
 
-        // Define field allowselffileuploads to be added to ojt_topic_item.
+        // Define field position to be added to ojt_topic_item.
         $field = new xmldb_field('position', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'allowselffileuploads');
 
-        // Conditionally launch add field allowselffileuploads.
+        // Conditionally launch add field position.
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
 
         // ojt savepoint reached.
         upgrade_mod_savepoint(true, 2017011101, 'ojt');
+    }
+    
+    // MPIHAS-384
+    // Additional feature request
+    // Add sort position to topics
+    if ($oldversion < 2017011102) {
+        $table = new xmldb_table('ojt_topic');
+
+        // Define field position to be added to ojt_topic.
+        $field = new xmldb_field('position', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'allowcomments');
+
+        // Conditionally launch add field position.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011102, 'ojt');
     }
 
     return true;

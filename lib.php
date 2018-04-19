@@ -620,3 +620,23 @@ function ojt_get_topic_items($topicid) {
     
     return $items;
 }
+
+/**
+ * A centralised function to get topics so that we can display them according to their sort position 
+ * 
+ * @global type $DB
+ * @param type $ojtid
+ * @return object topics
+ */
+function ojt_get_topics($ojtid) {
+    global $DB;
+    
+    $topics_sql = "SELECT * 
+                    FROM {ojt_topic} 
+                   WHERE ojtid = :ojtid 
+                ORDER BY position ASC
+                ";
+    $topics = $DB->get_records_sql($topics_sql, array('ojtid' => $ojtid));
+    
+    return $topics;
+}

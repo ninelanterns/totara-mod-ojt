@@ -52,20 +52,38 @@ M.mod_ojt_sorttopics = M.mod_ojt_mod_ojt_sorttopics || {
 
         // Init topic expand/collapse
         $( function() {
-            // init sortable
+            // init sortable topic items
             $('.config-mod-ojt-topic-items').sortable();
+            
+            // init sortable topic
+            $('.ojt-sortable-topics').sortable();
             
             // save item positions
             $('.btn-sort-topic-items').click(function(){
-                M.mod_ojt_sorttopics.sort($(this).attr('data-topicid'));
+                M.mod_ojt_sorttopics.sort_topic_items($(this).attr('data-topicid'));
             });
+            
+            // save topic positions
+            $('#save-sort-ojt-topics').click(function(){
+                M.mod_ojt_sorttopics.sort_topics();
+            });
+            
+            // show modal
+            $('#update-ojt-topics-order').click(function() {
+                M.mod_ojt_sorttopics.show_topic_sort_modal();
+            })
+            
+            // hide modal
+            $('#cancel-sort-ojt-topics').click(function() {
+                M.mod_ojt_sorttopics.hide_topic_sort_modal();
+            })
         });
         
 
 
     },  // init
     
-    sort: function(topicid) {
+    sort_topic_items: function(topicid) {
         var form = $('#ojt-topic-items-sort-form-'+topicid);
         M.mod_ojt_sorttopics.add_loading();
         $.ajax({
@@ -85,6 +103,28 @@ M.mod_ojt_sorttopics = M.mod_ojt_mod_ojt_sorttopics || {
         });
     },
     
+    sort_topics: function() {
+        var form = $('#ojt-topic-sort-form');
+        M.mod_ojt_sorttopics.add_loading();
+        $.ajax({
+            method: "POST",
+            url: M.cfg.wwwroot+"/mod/ojt/ajax/sort_topics.php",
+            dataType: 'JSON',
+            data:form.serialize()
+        })
+        .done(function(data) {
+            if(data.success) {
+                // refresh page
+                location.reload();
+            }
+        })
+        .fail(function() {
+            // do something
+            M.mod_ojt_sorttopics.remove_loading();
+            M.mod_ojt_sorttopics.hide_topic_sort_modal();
+        });
+    },
+    
     add_loading: function() {
         var loading = '<div class="ojt-sort-loading"></div>';
         $('body').append(loading);
@@ -92,6 +132,15 @@ M.mod_ojt_sorttopics = M.mod_ojt_mod_ojt_sorttopics || {
     
     remove_loading: function() {
         $('.ojt-sort-loading').remove();
+    },
+    
+    show_topic_sort_modal: function() {
+        $('.ojt-modal-overlay').show();
+        $('#ojt-modal').show();
+    },
+    
+    hide_topic_sort_modal: function() {
+        $('.ojt-modal-overlay').hide();
+        $('#ojt-modal').hide();
     }
-
 }
