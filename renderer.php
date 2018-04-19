@@ -35,11 +35,18 @@ class mod_ojt_renderer extends plugin_renderer_base {
 
         $out = '';
         $out .= html_writer::start_tag('div', array('id' => 'config-mod-ojt-topics'));
-
-        $topics = $DB->get_records('ojt_topic', array('ojtid' => $ojt->id), 'id');
+        
+        // KINEO CCM
+        // get sorted recrod
+        //$topics = $DB->get_records('ojt_topic', array('ojtid' => $ojt->id), 'id');
+        $topics = ojt_get_topics($ojt->id);
         if (empty($topics)) {
             return html_writer::tag('p', get_string('notopics', 'ojt'));
         }
+        // MPIHAS-384
+        // KINEO CCM
+        // Build sortable topic
+        $topics_li = '';
         foreach ($topics as $topic) {
             $out .= html_writer::start_tag('div', array('class' => 'config-mod-ojt-topic'));
             $out .= html_writer::start_tag('div', array('class' => 'config-mod-ojt-topic-heading'));
@@ -57,10 +64,60 @@ class mod_ojt_renderer extends plugin_renderer_base {
 
             $out .= $this->config_topic_items($ojt->id, $topic->id, $config);
             $out .= html_writer::end_tag('div');
+            
+            // MPIHAS-384
+            // KINEO CCM
+            // Build sortable topic
+            $topics_li .= html_writer::tag('li',format_string($topic->name) .
+                            html_writer::tag('input', null, 
+                                array(
+                                    'name' => 'topic_ids[]', 
+                                    'value' => $topic->id, 
+                                    'type' => 'hidden'
+                                )
+                            )// hidden input field for ordering on the server site via AJAX
+                        );
+                            
         }
 
         $out .= html_writer::end_tag('div');
-
+        
+        // MPIHAS-384
+        // KINEO CCM
+        // Popup to sort topics
+        $out .= html_writer::div(null, 'ojt-modal-overlay');
+        $out .= html_writer::start_div(null, array('id' => 'ojt-modal')); // start id="ojt-modal"
+        $out .= html_writer::div(
+                    html_writer::tag('h2', get_string('sorttopic','mod_ojt')), 
+                    'ojt-modal-header'
+                ); // Modal header
+        
+        // start modal body
+        $out .= html_writer::start_div('ojt-modal-body');
+        // sort topics form
+        $out .= html_writer::start_tag('form', array('id' => 'ojt-topic-sort-form'));
+        // ojt id hidden field
+        $out .= html_writer::tag('input', null, 
+                                array(
+                                    'name' => 'ojtid', 
+                                    'value' => $ojt->id, 
+                                    'type' => 'hidden'
+                                )
+                            );
+        $out .= html_writer::tag('ul', $topics_li, array('class' => 'ojt-sortable-topics'));
+        // close topics sort form
+        $out .= html_writer::end_tag('form');
+        // close modal body
+        $out .= html_writer::end_div(); 
+        // create footer
+        $out .= html_writer::div(
+                    html_writer::tag('button',get_string('btn_sorttopic', 'mod_ojt'), array('id' => 'save-sort-ojt-topics')) .
+                    html_writer::tag('button',get_string('btn_cancel', 'mod_ojt'), array('id' => 'cancel-sort-ojt-topics')) 
+                ,'ojt-modal-footer');
+        // close modal
+        $out .= html_writer::end_div();
+        // END KINEO CCM
+        
         return $out;
     }
 
@@ -87,7 +144,19 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $out .= html_writer::end_tag('div');
         }
         $out .= html_writer::end_tag('div');
-
+        
+        // KINEO CCM 
+        $sort_button = html_writer::tag('button', get_string('btn_sorttopicitems', 'mod_ojt'), 
+                array(
+                        'type' => 'button', 
+                        'class' => 'btn-sort-topic-items',
+                        'data-topicid' => $topicid
+                    )
+                );
+        $out .= html_writer::div($sort_button, 'sortbutton-container');
+        // close Sort Form ojt-topic-items-sort-form
+        $out .= html_writer::end_tag('form');
+        
         return $out;
     }
 

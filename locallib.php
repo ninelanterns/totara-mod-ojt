@@ -82,7 +82,7 @@ function ojt_get_user_topics($userid, $ojtid) {
         LEFT JOIN {ojt_topic_signoff} s ON t.id = s.topicid AND s.userid = ?
         LEFT JOIN {user} su ON s.modifiedby = su.id
         WHERE t.ojtid = ?
-        ORDER BY t.id';
+        ORDER BY t.position'; // KINEO CCM => from i.id to i.position
     return $DB->get_records_sql($sql, array(OJT_CTYPE_TOPIC, $userid, $userid, $ojtid));
 }
 

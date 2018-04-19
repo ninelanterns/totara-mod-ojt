@@ -128,7 +128,62 @@ img.ojt-topic-completion-status {
     width: 100%;
     height: 100%;
     top:0;
-    background-color: rgba(0,0,0,0.7);
+    background-color: rgba(0,0,0,0.5);
+    z-index: 200;
+}
+.ojt-modal-overlay {
+    position: fixed;
+    background-color: rgba(0,0,0,0.5);
+    width: 100%;
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    z-index: 10;
+    display: none;
+}
+#ojt-modal {
+    display: none;
+    position: absolute;
+    z-index: 100;
+    background-color: #fff;
+    margin: auto;
+    width: 600px;
+    top: 10%;
+}
+.ojt-modal-header {
+    padding: 15px;
+}
+.ojt-modal-body {
+    padding: 15px;
+    min-height: 250px;
+}
+.ojt-modal-footer {
+    text-align: right;
+    background-color: #f1f1f1;
+    padding: 15px;
+}
+.ojt-modal-header h2 {
+    padding-bottom: 0;
+    margin-bottom: 0;
+    margin-left: 0;
+    padding-left: 0;
+}
+ul.ojt-sortable-topics {
+    list-style: none;
+    margin-left: 0;
+    padding-left: 0;
+}
+ul.ojt-sortable-topics li {
+    border: 1px dashed #d2d2d2;
+    margin-bottom: 5px;
+    padding: 5px 10px;
+    cursor: n-resize;
+}
+ul.ojt-sortable-topics li.ui-sortable-handle.ui-sortable-helper {
+    border-style: solid;
+    background-color: #d2d2d2;
 }
 /**
  * printing styles

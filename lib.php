@@ -694,4 +694,22 @@ function is_ojt_in_progress($userid, $ojtid,$topicid = false) {
     return $DB->get_records('ojt_completion', $params);
 }
 
-// END - KINEO CCM
+/**
+ * A centralised function to get topics so that we can display them according to their sort position 
+ * 
+ * @global type $DB
+ * @param type $ojtid
+ * @return object topics
+ */
+function ojt_get_topics($ojtid) {
+    global $DB;
+    
+    $topics_sql = "SELECT * 
+                    FROM {ojt_topic} 
+                   WHERE ojtid = :ojtid 
+                ORDER BY position ASC
+                ";
+    $topics = $DB->get_records_sql($topics_sql, array('ojtid' => $ojtid));
+    
+    return $topics;
+}

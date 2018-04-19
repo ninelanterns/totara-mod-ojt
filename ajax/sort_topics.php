@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AJAX script to update topic items position
+ * AJAX script to update topic position
  *
  * @package    mod
  * @subpackage ojt
@@ -17,18 +17,18 @@ require_once('../../../config.php');
 
 global $DB, $PAGE;
 
-$topicid = required_param('topicid', PARAM_INT);
-$topic_items_ids = required_param('topic_items_ids', PARAM_INT);
+$ojtid = required_param('ojtid', PARAM_INT);
+$topic_ids = required_param('topic_ids', PARAM_INT);
 
-// get current topic items
-$topic_items = $DB->get_records('ojt_topic_item', array('topicid' => $topicid));
+// get current topic for OJT
+$topics = $DB->get_records('ojt_topic', array('ojtid' => $ojtid));
 
-foreach($topic_items_ids as $key => $itemid) {
-    if(!empty($topic_items[$itemid])) {
-        $topic_items[$itemid]->position = $key;
+foreach($topic_ids as $key => $topic_id) {
+    if(!empty($topics[$topic_id])) {
+        $topics[$topic_id]->position = $key;
         
         // update items
-        $DB->update_record('ojt_topic_item', $topic_items[$itemid]);
+        $DB->update_record('ojt_topic',  $topics[$topic_id]);
     }
 }
 
