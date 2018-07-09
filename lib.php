@@ -229,7 +229,7 @@ function ojt_get_completion_requirements($cm) {
     if ($ojt->completiontopics) {
         $result[] = get_string('completiontopics', 'ojt');
     }
-    
+
     if ($ojt->completionmanagersignoff) {
         $result[] = get_string('completionmanagersignoff', 'ojt');
     }
@@ -260,7 +260,7 @@ function ojt_get_completion_progress($cm, $userid) {
             $result[] = get_string('completiontopics', 'ojt');
         }
     }
-    
+
     if ($ojt->completionmanagersignoff) {
         $has_incomplete_compulsory = $DB->record_exists_sql('
             SELECT ojt.id
@@ -273,7 +273,7 @@ function ojt_get_completion_progress($cm, $userid) {
                AND ojt.id = :ojtid
                AND topic.completionreq = 0
             ', array('ojtid' => $ojt->id, 'userid' => $userid));
-        
+
         if (empty($has_incomplete_compulsory)) {
             $result[] = get_string('completionmanagersignoff', 'ojt');
         }
@@ -304,16 +304,16 @@ function ojt_get_completion_state($course, $cm, $userid, $type) {
     if (empty($ojt->completiontopics) && empty($ojt->completionmanagersignoff)) {
         return $type;
     }
-    
+
     $completiontopics = true;
     $completionmanagersignoff = true;
-    
+
     if (!empty($ojt->completiontopics)) {
         $completiontopics = $DB->record_exists_select('ojt_completion',
             'ojtid = ? AND userid =? AND type = ? AND status IN (?, ?)',
             array($ojt->id, $userid, OJT_CTYPE_OJT, OJT_COMPLETE, OJT_REQUIREDCOMPLETE));
     }
-    
+
     if (!empty($ojt->completionmanagersignoff)) {
         $has_incomplete_compulsory = $DB->record_exists_sql('
             SELECT ojt.id
@@ -326,10 +326,10 @@ function ojt_get_completion_state($course, $cm, $userid, $type) {
                AND ojt.id = :ojtid
                AND topic.completionreq = 0
             ', array('ojtid' => $ojt->id, 'userid' => $userid));
-        
+
         $completionmanagersignoff = empty($has_incomplete_compulsory);
     }
-    
+
     return ($completiontopics && $completionmanagersignoff);
 }
 
@@ -517,11 +517,11 @@ function ojt_pluginfile($course, $cm, $context, $filearea, array $args, $forcedo
         return false;
     }
 
-    $fs = get_file_storage();  
+    $fs = get_file_storage();
     $filename = array_pop($args);
     $filepath = array_shift($args) ? '/'.implode('/', array_shift($args)).'/' : '/';
 
-    if (!$file = $fs->get_file($context->id, 'mod_ojt', $filearea, $userid, $filepath, $filename) or $file->is_directory()) {
+    if (!($file = $fs->get_file($context->id, 'mod_ojt', $filearea, $userid, $filepath, $filename)) || $file->is_directory()) {
         send_file_not_found();
     }
 
@@ -668,7 +668,7 @@ function is_ojt_in_progress($userid, $ojtid,$topicid = false) {
                 'ojtid' => $ojtid
             );
     if($topicid) {
-        $params['topicid'] = $topicid; 
+        $params['topicid'] = $topicid;
     }
     return $DB->get_records('ojt_completion', $params);
 }

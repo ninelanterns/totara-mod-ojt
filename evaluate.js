@@ -58,14 +58,15 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         // Init ojt completion toggles.
         // KINEO CCM: LOTHS-201
         $('.ojt-completion-toggle').on('change', function () {
-            var completionimg = this;
-            var itemid = $(this).attr('ojt-item-id');
+            var completionimg = $(this);
+            var itemid = $(this).closest('.ojt-eval-actions').attr('ojt-item-id');
             var completion_status = $(this).val();
             var badge = $('#ojt-badge-'+itemid);
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/evaluatesave.php',
                 type: 'POST',
                 data: {
+                    'sesskey' : M.cfg.sesskey,
                     'action': 'togglecompletion',
                     'bid': config.ojtid,
                     'userid': config.userid,
@@ -73,11 +74,10 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     'completion_status': completion_status
                 },
                 beforeSend: function() {
-                    //$(completionimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
+                    //ojtobj.replaceIcon(completionimg, 'loading');
                     badge.html('').removeClass().html('updating...').addClass('badge updating');
                 },
                 success: function(data) {
-                    var data = $.parseJSON(data);
                     // KINEO CCM
                     // Update badge
                     badge.html('').removeClass().html(data.item.badge_text).addClass(data.item.badge_class);
@@ -104,6 +104,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 url: M.cfg.wwwroot+'/mod/ojt/evaluatesave.php',
                 type: 'POST',
                 data: {
+                    'sesskey' : M.cfg.sesskey,
                     'action': 'savecomment',
                     'bid': config.ojtid,
                     'userid': config.userid,
@@ -111,7 +112,6 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     'comment': $(commentinput).val()
                 },
                 success: function(data) {
-                    var data = $.parseJSON(data);
 
                     // Update comment text box, so we can get the date in there too
                     $(commentinput).val(data.item.comment);
@@ -130,28 +130,28 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         // Init completion witness toggle.
         $('.ojt-witness-toggle').on('click', function () {
             var completionimg = this;
-            var itemid = $(this).attr('ojt-item-id');
+            var itemid = $(this).closest('.ojt-witness-item').attr('ojt-item-id');
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/witnesssave.php',
                 type: 'POST',
                 data: {
+                    'sesskey' : M.cfg.sesskey,
                     'bid': config.ojtid,
                     'userid': config.userid,
                     'id': itemid
                 },
                 beforeSend: function() {
-                    $(completionimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
+                    ojtobj.replaceIcon(completionimg, 'loading');
                 },
                 success: function(data) {
-                    var data = $.parseJSON(data);
                     if (data.item.witnessedby > 0) {
-                        $(completionimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
+                        ojtobj.replaceIcon(completionimg, 'completion-manual-y');
                     } else {
-                        $(completionimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
+                        ojtobj.replaceIcon(completionimg, 'completion-manual-n');
                     }
 
                     // Update the topic's completion too.
-                    $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status').html($('#ojt-topic-status-icon-'+data.topic.status).clone());
+                    ojtobj.setTopicStatusIcon(data.topic.status, $('#ojt-topic-'+data.topic.topicid+' .ojt-topic-status'));
 
                     // Update modified string.
                     $('.mod-ojt-witnessedstr[ojt-item-id='+itemid+']').html(data.modifiedstr);
@@ -165,30 +165,30 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
 
         // Init topic signoffs
         $('.ojt-topic-signoff-toggle').on('click', function () {
-            var signoffimg = this;
+            var signoffimg = $(this);
             var topicid = $(this).closest('.mod-ojt-topic-signoff');
             var topicid = $(topicid).attr('ojt-topic-id');
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/evaluatesignoff.php',
                 type: 'POST',
                 data: {
+                    'sesskey' : M.cfg.sesskey,
                     'bid': config.ojtid,
                     'userid': config.userid,
                     'id': topicid
                 },
                 beforeSend: function() {
-                    $(signoffimg).attr('src', M.util.image_url('i/ajaxloader', 'moodle'));
+                    ojtobj.replaceIcon(signoffimg, 'loading');
                 },
                 success: function(data) {
-                    var data = $.parseJSON(data);
                     if (data.topicsignoff.signedoff) {
-                        $(signoffimg).attr('src', M.util.image_url('i/completion-manual-y', 'moodle'));
+                        ojtobj.replaceIcon(signoffimg, 'completion-manual-y');
                     } else {
-                        $(signoffimg).attr('src', M.util.image_url('i/completion-manual-n', 'moodle'));
+                        ojtobj.replaceIcon(signoffimg, 'completion-manual-n');
                     }
 
                     $('.mod-ojt-topic-signoff[ojt-topic-id='+topicid+'] .mod-ojt-topic-modifiedstr').html(data.modifiedstr);
-                    
+
                     if (data.alertcannotundo) {
                         alert(M.util.get_string('alertcannotundo', 'mod_ojt'));
                     }
@@ -200,5 +200,29 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             });
         });
     },  // init
-}
+
+	replaceIcon: function (icon, newiconname) {
+        require(['core/templates'], function (templates) {
+			templates.renderIcon(newiconname).done(function (html) {
+				icon.attr('data-flex-icon', $(html).attr('data-flex-icon'));
+				icon.attr('class', $(html).attr('class'));
+			});
+		});
+
+	},
+
+    setTopicStatusIcon: function (topicstatus, statuscontainer) {
+		var iconname = 'times-danger';
+		if (topicstatus == this.config.OJT_COMPLETE) {
+			iconname = 'check-success';
+		} else if (topicstatus == this.config.OJT_REQUIREDCOMPLETE) {
+			iconname = 'check-warning';
+		}
+		require(['core/templates'], function (templates) {
+            templates.renderIcon(iconname).done(function (html) {
+                statuscontainer.html(html);
+            });
+		});
+    }
+};
 

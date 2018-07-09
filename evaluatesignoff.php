@@ -24,10 +24,14 @@
  * OJT item completion ajax toggler
  */
 
+define('AJAX_SCRIPT', true);
+
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once($CFG->dirroot.'/mod/ojt/lib.php');
 require_once($CFG->dirroot.'/mod/ojt/locallib.php');
 require_once($CFG->dirroot .'/totara/core/js/lib/setup.php');
+
+require_sesskey();
 
 $userid = required_param('userid', PARAM_INT);
 $ojtid  = required_param('bid', PARAM_INT);
@@ -61,7 +65,7 @@ $topicsignoff->modifiedby = $USER->id;
 $alertcannotundo = false;
 
 if ($currentsignoff = $DB->get_record('ojt_topic_signoff', array('userid' => $userid, 'topicid' => $topicid))) {
-    
+
     // have capability to undo
     if ($currentsignoff->signedoff == 0 || (has_capability('mod/ojt:unchecksignoff', context_module::instance($cm->id)))) {
         // Update
@@ -73,7 +77,7 @@ if ($currentsignoff = $DB->get_record('ojt_topic_signoff', array('userid' => $us
         $topicsignoff->signedoff = 1;
         $topicsignoff->timemodified = $currentsignoff->timemodified;
     }
-        
+
 } else {
     // Insert
     $topicsignoff->signedoff = 1;
