@@ -129,7 +129,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
 
         // Init completion witness toggle.
         $('.ojt-witness-toggle').on('click', function () {
-            var completionimg = this;
+            var completionimg = $(this);
             var itemid = $(this).closest('.ojt-witness-item').attr('ojt-item-id');
             $.ajax({
                 url: M.cfg.wwwroot+'/mod/ojt/witnesssave.php',

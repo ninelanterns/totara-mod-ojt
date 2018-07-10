@@ -338,6 +338,12 @@ class rb_source_ojt_completion extends rb_base_source {
     protected function define_contentoptions() {
         $contentoptions = array();
         $this->add_basic_user_content_options($contentoptions);
+        $contentoptions[] = new rb_content_option(
+            'ojt_completion_type',
+            get_string('ojtcompletiontype', 'rb_source_ojt_completion'),
+            'base.type',
+            'base'
+        );
         return $contentoptions;
     }
 

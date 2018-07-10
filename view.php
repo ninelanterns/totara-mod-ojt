@@ -62,7 +62,6 @@ $PAGE->set_title(format_string($ojt->name));
 $PAGE->set_heading(format_string($course->fullname));
 $PAGE->requires->css('/mod/ojt/styles.css');
 
-local_js();
 $jsmodule = array(
     'name' => 'mod_ojt_expandcollapse',
     'fullpath' => '/mod/ojt/expandcollapse.js',
