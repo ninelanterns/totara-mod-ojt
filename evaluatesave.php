@@ -41,8 +41,10 @@ $cm         = get_coursemodule_from_instance('ojt', $ojt->id, $course->id, false
 
 require_login($course, true, $cm);
 
-if (!ojt_can_evaluate($userid, context_module::instance($cm->id))) {
-    print_error('access denied');
+if(empty($ojt->allowselfevaluation)) {
+    if (!ojt_can_evaluate($userid, context_module::instance($cm->id))) {
+        print_error('access denied');
+    }
 }
 
 // Get the ojt item, joining on topic to ensure the item does belong to the ojt

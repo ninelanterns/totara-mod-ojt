@@ -102,3 +102,5 @@ $string['btn_sorttopic'] = 'Save Topic Order';
 $string['sorttopic'] = 'Sort Topic';
 $string['btn_cancel'] = 'Cancel';
 $string['btn_updatetopic_order'] = 'Update topic order';
+// MPIHAS-523
+$string['allowselfevaluation'] = 'Allow learner self-evaluation';

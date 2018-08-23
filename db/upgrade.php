@@ -60,7 +60,7 @@ function xmldb_ojt_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016031400, 'ojt');
     }
     
-    // MPIHAS-384
+    // KINEO CCM MPIHAS-384
     // Add sort position to topics items
     if ($oldversion < 2017011101) {
         $table = new xmldb_table('ojt_topic_item');
@@ -77,7 +77,7 @@ function xmldb_ojt_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2017011101, 'ojt');
     }
     
-    // MPIHAS-384
+    // KINEO CCM MPIHAS-384
     // Additional feature request
     // Add sort position to topics
     if ($oldversion < 2017011102) {
@@ -93,6 +93,22 @@ function xmldb_ojt_upgrade($oldversion) {
 
         // ojt savepoint reached.
         upgrade_mod_savepoint(true, 2017011102, 'ojt');
+    }
+    
+    // KINEO CCM MPIHAS-523
+    if ($oldversion < 2017011103) {
+        $table = new xmldb_table('ojt');
+
+        // Define field allowselfevaluation to be added to ojt.
+        $field = new xmldb_field('allowselfevaluation', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'itemwitness');
+
+        // Conditionally launch add field allowselfevaluation.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011103, 'ojt');
     }
 
     return true;

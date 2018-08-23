@@ -63,6 +63,9 @@ class mod_ojt_mod_form extends moodleform_mod {
         // Workflow
         $mform->addElement('advcheckbox', 'managersignoff', get_string('managersignoff', 'ojt'));
         $mform->addElement('advcheckbox', 'itemwitness', get_string('itemwitness', 'ojt'));
+        
+        // MPIHAS-523 - Allow self evaluation
+        $mform->addElement('advcheckbox', 'allowselfevaluation', get_string('allowselfevaluation', 'ojt'));
 
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
