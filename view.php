@@ -75,6 +75,11 @@ $canevaluate = has_capability('mod/ojt:evaluate', $modcontext);
 $canevalself = has_capability('mod/ojt:evaluateself', $modcontext);
 $cansignoff = has_capability('mod/ojt:signoff', $modcontext);
 
+// KINEO CCM MPIHAS-523
+if(!empty($ojt->allowselfevaluation)) {
+    $canevalself = true;
+}
+
 // KINEO CCM
 // LOTHS-208
 $config = get_config('ojt');
