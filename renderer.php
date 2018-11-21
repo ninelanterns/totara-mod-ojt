@@ -22,6 +22,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+use core\output\flex_icon;
+
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once($CFG->dirroot.'/mod/ojt/lib.php');
 
