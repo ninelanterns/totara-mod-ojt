@@ -59,7 +59,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         // KINEO CCM: LOTHS-201
         $('.ojt-completion-toggle').on('change', function () {
             var completionimg = $(this);
-            var itemid = $(this).closest('.ojt-eval-actions').attr('ojt-item-id');
+            var itemid = $(this).attr('ojt-item-id');
             var completion_status = $(this).val();
             var badge = $('#ojt-badge-'+itemid);
             $.ajax({
