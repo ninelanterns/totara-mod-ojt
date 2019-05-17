@@ -120,3 +120,7 @@ $string['alertcannotundo'] = 'No capability to undo sign-off. If required, pleas
 // ALDHAS-207
 $string['configrolestoincludeinreport'] = 'Roles to include in the OJT evaluate report';
 $string['configrolestoincludeinreportdesc'] = 'Enter a comma separated list of roles (shortname) to be included in the evaluate report for OJT. If this is left empty, all the enrolled users will be shown (Default behavour).';
+// PETHAS-115
+$string['submit'] = 'Evaluate other students';
+$string['backbutton'] = 'Back to course';
+
