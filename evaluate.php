@@ -134,5 +134,13 @@ if ((has_capability('mod/ojt:evaluate', $modcontext) || has_capability('mod/ojt:
     //echo html_writer::link(new moodle_url($CFG->wwwroot.'/course/view.php',array('id' => $course->id)), get_string('backbutton','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
 }
 
+echo $renderer->activity_completion_status_dropdown($userojt);
+// on ojt_completion table
+// on column type = 0 = ojt
+// type = 1 = Topic etc
+// so depending on the status update this status
+
+
+
 // Finish the page.
 echo $OUTPUT->footer();

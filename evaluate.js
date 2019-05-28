@@ -112,6 +112,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     'comment': $(commentinput).val()
                 },
                 success: function(data) {
+                    var data = $.parseJSON(data);
 
                     // Update comment text box, so we can get the date in there too
                     $(commentinput).val(data.item.comment);
@@ -144,6 +145,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     ojtobj.replaceIcon(completionimg, 'loading');
                 },
                 success: function(data) {
+                    var data = $.parseJSON(data);
                     if (data.item.witnessedby > 0) {
                         ojtobj.replaceIcon(completionimg, 'completion-manual-y');
                     } else {
@@ -181,6 +183,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                     ojtobj.replaceIcon(signoffimg, 'loading');
                 },
                 success: function(data) {
+                    var data = $.parseJSON(data);
                     if (data.topicsignoff.signedoff) {
                         ojtobj.replaceIcon(signoffimg, 'completion-manual-y');
                     } else {
@@ -200,8 +203,11 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             });
         });
         
-        // init evaluate completion
-        ojtobj.evaluateStudent();
+        //HWRHAS-159
+        // show confirmation dialog
+        ojtobj.initConfirmationDialog();
+        // init update completion
+        ojtobj.updateCompletionStatus();
     },  // init
 
     replaceIcon: function (icon, newiconname) {
@@ -227,7 +233,21 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             });
         });
     },
-
+    
+    /**
+     * Show confirmation dialog
+     * 
+     * @returns {undefined}
+     */
+    initConfirmationDialog: function () {
+        $('.ojt-update-completion-status').click(function() {
+            var status_text = $(this).data('completion-status-text');
+            var status_value = $(this).data('completion-status-value');
+            $('#ojt-modal-completion-status').html(status_text);
+            $('#ojt-completionstatus').val(status_value);
+        });
+    },
+    
     /**
      * KINEO CCM HWRHAS-162
      * 
@@ -248,6 +268,32 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 },
                 error: function (data) {
                     alert('Error saving evaluation data...');
+                    $('#ojt-confirmation-loading').hide();
+                }
+            });
+        });
+    },
+    
+    /**
+     * Update completion status
+     * 
+     * @returns {undefined}
+     */
+    updateCompletionStatus: function() {
+        $('#ojt-confirm-completion-status').click(function() {
+            $('#ojt-confirmation-loading').show();
+            $.ajax({
+                url: M.cfg.wwwroot+'/mod/ojt/ajax/update_completion_status.php',
+                type: 'POST',
+                data:$('#ojt-update-ojt-completion-status-form').serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if(data.status) {
+                        location.reload();
+                    }
+                },
+                error: function (data) {
+                    alert('Error updating completion status...');
                     $('#ojt-confirmation-loading').hide();
                 }
             });

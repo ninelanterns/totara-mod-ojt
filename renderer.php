@@ -382,6 +382,43 @@ class mod_ojt_renderer extends plugin_renderer_base {
     }
     
     /**
+     * Completions status dropdown
+     * 
+     * @param type $userojt
+     * @return type
+     */
+    function activity_completion_status_dropdown($userojt) {
+        $ojt_completion_status = array(
+            array('key' => OJT_COMPLETE, 'value' => get_string('achieved', 'mod_ojt')),
+            array('key' => OJT_INCOMPLETE, 'value' => get_string('notachieved', 'mod_ojt')),
+            array('key' => OJT_FAILED, 'value' => get_string('trainingrequired', 'mod_ojt'))
+        );
+        
+        $data = new stdClass();
+        $data->completion_status = $ojt_completion_status;
+        $data->userid = $userojt->userid;
+        $data->ojtid = $userojt->id;
+        switch($userojt->status) {
+            case OJT_INCOMPLETE:
+                $data->completionclass = 'ojt-incomplete';
+                $data->current_completion_status = get_string('notachieved', 'mod_ojt');
+                break;
+            
+            case OJT_COMPLETE:
+                $data->completionclass = 'ojt-complete';
+                $data->current_completion_status = get_string('achieved', 'mod_ojt');
+                break;
+            
+            case OJT_FAILED:
+                $data->completionclass = 'ojt-failed';
+                $data->current_completion_status = get_string('trainingrequired', 'mod_ojt');
+                break;
+        }
+        
+        return $this->render_from_template('mod_ojt/completion_status_dropdown', $data);     
+    }
+    
+    /**
      * HWRHAS-162
      * Pretty much a duplicate of user_ojt function
      * This will however only save OJT evaluation data on one go

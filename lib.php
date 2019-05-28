@@ -694,3 +694,64 @@ function ojt_get_topics($ojtid) {
     
     return $topics;
 }
+
+/**
+ * Get ojt completion info
+ * 
+ * @global type $DB
+ * @param type $userid
+ * @param type $ojtid
+ * @return type
+ */
+function ojt_get_completion_info($userid, $ojtid) {
+    global $DB;
+    
+    $sql = "SELECT oc.*
+              FROM {modules} m
+              JOIN {course_modules} cm
+                ON m.id = cm.module
+              JOIN {ojt_completion} oc
+                ON oc.ojtid = cm.instance
+             WHERE m.name = :modulename
+               AND oc.type = :type
+               AND oc.userid = :userid
+               AND oc.ojtid = :ojtid
+        ";
+    
+    $params = array(
+        'modulename' => 'ojt',
+        'type' => OJT_CTYPE_OJT, // zero indicates, this is the record for main ojt completion
+        'userid' => $userid,
+        'ojtid' => $ojtid
+    );
+    
+    return $DB->get_record_sql($sql, $params);
+}
+
+/**
+ * Get course module info
+ * 
+ * @global type $DB
+ * @param type $ojtid
+ * @return type
+ */
+function ojt_get_course_module($ojtid) {
+    global $DB;
+    
+    $sql = "SELECT cm.*
+              FROM {course_modules} cm
+              JOIN {modules} m
+                ON m.id = cm.module
+              JOIN {ojt} ojt
+                ON ojt.id = cm.instance
+             WHERE m.name = :modulename
+               AND ojt.id = :ojtid
+            ";
+    
+    $params = array(
+        'modulename' => 'ojt',
+        'ojtid' => $ojtid
+    );
+    
+    return $DB->get_record_sql($sql, $params);
+}
