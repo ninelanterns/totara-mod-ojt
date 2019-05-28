@@ -188,7 +188,55 @@ ul.ojt-sortable-topics li.ui-sortable-handle.ui-sortable-helper {
  * printing styles
  */
 
-
+/**
+ * HWRHAS-159
+ */
+.ojt-update-completion-status {
+    display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.42857143;
+    color: #333;
+    white-space: nowrap;
+}
+.ojt-update-completion-status:hover {
+    background-color: #f1f1f1;
+    cursor: pointer;
+}
+.ojt-current-completion-status {
+    display: inline;
+    margin-left: 35px;
+}
+.ojt-current-completion-status .label {
+    margin-left: 10px;
+}
+.ojt-current-completion-status .label.ojt-incomplete {
+    background-color: #6c757d;
+}
+.ojt-current-completion-status .label.ojt-complete {
+    background-color: #28a745;
+}
+.ojt-current-completion-status .label.ojt-failed {
+    background-color: #dc3545;
+}
+#ojt-confirmation-loading {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    background-color: rgba(0,0,0,0.5);
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    display: none;
+}
+#ojt-confirmation-loading .fa{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    color: #ffffff;
+    font-size: 28px;
+}
 @media print {
     @page {
         margin: 25mm !important;
