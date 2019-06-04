@@ -71,11 +71,51 @@ function xmldb_ojt_upgrade($oldversion) {
             $dbman->add_field($table, $field);
         }
 
-        // Ojt savepoint reached.
-        upgrade_mod_savepoint(true, 2016031402, 'ojt');
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011103, 'ojt');
     }
+    
+    // KINEO CCM HWRHAS-160
+    if ($oldversion < 2017011104) {
+        $table = new xmldb_table('ojt_archives');
+        
+        // Adding fields
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('ojtid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('fileid', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('filename', XMLDB_TYPE_CHAR, '255', null, null, null, null);
+        $table->add_field('timecreated', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
 
+        // Adding keys to table.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        // Conditionally launch create table
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
 
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011104, 'ojt');
+    }
+    
+    
+    // KINEO CCM HWRHAS-160
+    if ($oldversion < 2017011105) {
+        // add new field 'archived' in ojt_completion
+        $table = new xmldb_table('ojt_completion');
 
+        // Define field archived to be added to ojt_completion.
+        $field = new xmldb_field('archived', XMLDB_TYPE_INTEGER, '2', null, null, null, '0', 'modifiedby');
+
+        // Conditionally launch add field ojt_completion.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011105, 'ojt');
+    }
+            
+    
     return true;
 }

@@ -124,3 +124,31 @@ $string['configrolestoincludeinreportdesc'] = 'Enter a comma separated list of r
 $string['submit'] = 'Evaluate other students';
 $string['backbutton'] = 'Back to course';
 
+// MPIHAS-384
+$string['btn_sorttopicitems'] = 'Save Topic Item Order';
+$string['positionupdate_successful'] = 'Position update successfully';
+$string['btn_sorttopic'] = 'Save Topic Order';
+$string['sorttopic'] = 'Sort Topic';
+$string['btn_cancel'] = 'Cancel';
+$string['btn_updatetopic_order'] = 'Update topic order';
+// MPIHAS-523
+$string['allowselfevaluation'] = 'Allow learner self-evaluation';
+// HWRHAS-159
+$string['completion_status'] = 'Completion status';
+$string['achieved'] = 'Achieved';
+$string['notachieved'] = 'Not Yet Achieved';
+$string['trainingrequired'] = 'Training Required';
+$string['cancel'] = 'Cancel';
+$string['confirm'] = 'Confirm';
+$string['confirm_modal_title'] = 'Confirm completions status';
+$string['confirm_modal_body'] = 'You are about to mark this activity\'s status as <strong id="ojt-modal-completion-status"></strong>. Please confirm?';
+$string['current_completion_status'] = 'Current completion status';
+$string['topic_item'] = 'Topic item';
+$string['ojtarchivedfor'] = 'Archived OJT record for {$a}';
+$string['ojtarchivedevidence'] = 'Archived OJT Evidence';
+$string['archiveojt'] = 'Archive OJT';
+
+
+// VNTHAS-372.
+$string['configpdfdefaultstate'] = 'Disable pdf by default';
+$string['configpdfdefaultstatedesc'] = 'When checked, PDF are generated in other evidence.';

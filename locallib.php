@@ -241,7 +241,19 @@ function ojt_update_topic_competency_proficiency($userid, $topicid, $status) {
     }
 }
 
-function ojt_update_completion($userid, $ojtid) {
+/**
+ * KINEO CCM 
+ * $tutor_forced_completion_status
+ * HWRHAS-159
+ * 
+ * @global type $DB
+ * @global type $USER
+ * @param type $userid
+ * @param type $ojtid
+ * @param type $tutor_forced_completion_status
+ * @return type
+ */
+function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status = null) {
     global $DB, $USER;
 
     // Check if all required ojt topics have been completed, then complete the ojt
@@ -270,7 +282,7 @@ function ojt_update_completion($userid, $ojtid) {
     if (empty($currentcompletion->status) || $status != $currentcompletion->status) {
         // Update ojt completion
         $completion = empty($currentcompletion) ? new stdClass() : $currentcompletion;
-        $completion->status = $status;
+        $completion->status = !empty($tutor_forced_completion_status) ? $tutor_forced_completion_status : $status;
         $completion->timemodified = time();
         $completion->modifiedby = $USER->id;
         if (empty($currentcompletion)) {

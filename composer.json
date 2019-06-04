@@ -1,0 +1,18 @@
+{
+    "name": "totara-mod_ojt/totara_11_dev",
+    "description": "OJT mod in Totara 11",
+    "type": "totara-mod_ojt",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+            "name": "Hoogesh Dawoodarry",
+            "email": "hoogesh.dawoodarry@kineo.com.au"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    },
+    "require-dev": {
+        "vlucas/phpdotenv": "^3.4@dev"
+    }
+}
