@@ -114,3 +114,7 @@ $string['confirm'] = 'Confirm';
 $string['confirm_modal_title'] = 'Confirm completions status';
 $string['confirm_modal_body'] = 'You are about to mark this activity\'s status as <strong id="ojt-modal-completion-status"></strong>. Please confirm?';
 $string['current_completion_status'] = 'Current completion status';
+$string['topic_item'] = 'Topic item';
+$string['ojtarchivedfor'] = 'Archived OJT record for {$a}';
+$string['ojtarchivedevidence'] = 'Archived OJT Evidence';
+$string['archiveojt'] = 'Archive OJT';
