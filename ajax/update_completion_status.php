@@ -20,7 +20,7 @@ require_once($CFG->dirroot . '/mod/ojt/locallib.php');
 require_once($CFG->dirroot . '/lib/completionlib.php');
 require_once($CFG->dirroot . '/completion/classes/helper.php');
 
-global $DB, $PAGE, $USER;
+global $DB, $USER;
 
 $ojtid = required_param('ojtid', PARAM_INT);
 $userid = required_param('userid', PARAM_INT);

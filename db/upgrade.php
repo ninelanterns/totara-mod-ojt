@@ -115,7 +115,23 @@ function xmldb_ojt_upgrade($oldversion) {
         // ojt savepoint reached.
         upgrade_mod_savepoint(true, 2017011105, 'ojt');
     }
-            
+    
+    
+    // KINEO CCM HWRHAS-162
+    if ($oldversion < 2017011108) {
+        $table = new xmldb_table('ojt');
+
+        // Define field saveallonsubmit to be added to ojt.
+        $field = new xmldb_field('saveallonsubmit', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'allowselfevaluation');
+
+        // Conditionally launch add field saveallonsubmit.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011108, 'ojt');
+    }
     
     return true;
 }

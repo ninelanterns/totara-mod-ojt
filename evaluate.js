@@ -199,17 +199,20 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 }
             });
         });
+        
+        // init evaluate completion
+        ojtobj.evaluateStudent();
     },  // init
 
-	replaceIcon: function (icon, newiconname) {
-        require(['core/templates'], function (templates) {
-			templates.renderIcon(newiconname).done(function (html) {
-				icon.attr('data-flex-icon', $(html).attr('data-flex-icon'));
-				icon.attr('class', $(html).attr('class'));
-			});
-		});
+    replaceIcon: function (icon, newiconname) {
+    require(['core/templates'], function (templates) {
+                    templates.renderIcon(newiconname).done(function (html) {
+                            icon.attr('data-flex-icon', $(html).attr('data-flex-icon'));
+                            icon.attr('class', $(html).attr('class'));
+                    });
+            });
 
-	},
+    },
 
     setTopicStatusIcon: function (topicstatus, statuscontainer) {
 		var iconname = 'times-danger';
@@ -222,7 +225,33 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             templates.renderIcon(iconname).done(function (html) {
                 statuscontainer.html(html);
             });
-		});
+        });
+    },
+
+    /**
+     * KINEO CCM HWRHAS-162
+     * 
+     * @returns {undefined}
+     */
+    evaluateStudent: function() {
+        $('#mod-ojt-submit-evaluate-btn').click(function() {
+            $('#ojt-confirmation-loading').show();
+            $.ajax({
+                url: M.cfg.wwwroot+'/mod/ojt/ajax/evaluate_user.php',
+                type: 'POST',
+                data:$('#mod-ojt-user-evaluate-form').serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if(data.status) {
+                        location.reload();
+                    }
+                },
+                error: function (data) {
+                    alert('Error saving evaluation data...');
+                    $('#ojt-confirmation-loading').hide();
+                }
+            });
+        });
     }
 };
 

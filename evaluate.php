@@ -108,7 +108,11 @@ if ($ojt->intro) {
 
 // Print the evaluation
 $renderer = $PAGE->get_renderer('ojt');
-echo $renderer->user_ojt($userojt, $canevaluate, $cansignoff, $canwitness);
+if($userojt->saveallonsubmit) {
+     echo $renderer->user_ojt_save_on_submission($userojt, $canevaluate, $cansignoff, $canwitness);
+} else {
+    echo $renderer->user_ojt($userojt, $canevaluate, $cansignoff, $canwitness);
+}
 
 // KINEO CCM
 // LOTHS-209

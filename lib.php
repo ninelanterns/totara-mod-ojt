@@ -676,4 +676,3 @@ function is_ojt_in_progress($userid, $ojtid,$topicid = false) {
 }
 
 // END - KINEO CCM
-

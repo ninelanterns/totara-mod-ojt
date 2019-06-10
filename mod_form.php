@@ -63,6 +63,11 @@ class mod_ojt_mod_form extends moodleform_mod {
         // Workflow
         $mform->addElement('advcheckbox', 'managersignoff', get_string('managersignoff', 'ojt'));
         $mform->addElement('advcheckbox', 'itemwitness', get_string('itemwitness', 'ojt'));
+        
+        // HWRHAS-162 - While evaluating student
+        // If ticked save all data at once instead of the default method
+        $mform->addElement('advcheckbox', 'saveallonsubmit', get_string('saveallonsubmit', 'ojt'));
+        $mform->addHelpButton('saveallonsubmit', 'saveallonsubmit', 'ojt');
 
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
