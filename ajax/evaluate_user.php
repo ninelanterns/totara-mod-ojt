@@ -28,8 +28,8 @@ $signoff = optional_param('topicitems_signoff', null, PARAM_INT);
 $comments = optional_param('comments', null, PARAM_TEXT);
 $signoffenabled = optional_param('signoffenabled', null, PARAM_INT);
 $witnessenabled = optional_param('witnessenabled', null, PARAM_INT);
-$learnerid = required_param('learnerid', PARAM_INT);
-$ojtid = required_param('ojtid', PARAM_INT);
+$learnerid = required_param('learnerid', null, PARAM_INT);
+$ojtid = required_param('ojtid', null, PARAM_INT);
 
 // date format
 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');

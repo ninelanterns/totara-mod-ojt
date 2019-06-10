@@ -208,6 +208,8 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         ojtobj.initConfirmationDialog();
         // init update completion
         ojtobj.updateCompletionStatus();
+        // init evaluate completion
+        ojtobj.evaluateStudent();
     },  // init
 
     replaceIcon: function (icon, newiconname) {
@@ -235,6 +237,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
     },
     
     /**
+     * KINEO CCM HWRHAS-159
      * Show confirmation dialog
      * 
      * @returns {undefined}
@@ -245,32 +248,6 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             var status_value = $(this).data('completion-status-value');
             $('#ojt-modal-completion-status').html(status_text);
             $('#ojt-completionstatus').val(status_value);
-        });
-    },
-    
-    /**
-     * KINEO CCM HWRHAS-162
-     * 
-     * @returns {undefined}
-     */
-    evaluateStudent: function() {
-        $('#mod-ojt-submit-evaluate-btn').click(function() {
-            $('#ojt-confirmation-loading').show();
-            $.ajax({
-                url: M.cfg.wwwroot+'/mod/ojt/ajax/evaluate_user.php',
-                type: 'POST',
-                data:$('#mod-ojt-user-evaluate-form').serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    if(data.status) {
-                        location.reload();
-                    }
-                },
-                error: function (data) {
-                    alert('Error saving evaluation data...');
-                    $('#ojt-confirmation-loading').hide();
-                }
-            });
         });
     },
     
@@ -294,6 +271,32 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 },
                 error: function (data) {
                     alert('Error updating completion status...');
+                    $('#ojt-confirmation-loading').hide();
+                }
+            });
+        });
+    },
+    
+    /**
+     * KINEO CCM HWRHAS-162
+     * 
+     * @returns {undefined}
+     */
+    evaluateStudent: function() {
+        $('#mod-ojt-submit-evaluate-btn').click(function() {
+            $('#ojt-confirmation-loading').show();
+            $.ajax({
+                url: M.cfg.wwwroot+'/mod/ojt/ajax/evaluate_user.php',
+                type: 'POST',
+                data:$('#mod-ojt-user-evaluate-form').serialize(),
+                dataType: 'json',
+                success: function(data) {
+                    if(data.status) {
+                        location.reload();
+                    }
+                },
+                error: function (data) {
+                    alert('Error saving evaluation data...');
                     $('#ojt-confirmation-loading').hide();
                 }
             });
