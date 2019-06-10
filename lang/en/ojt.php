@@ -118,3 +118,7 @@ $string['topic_item'] = 'Topic item';
 $string['ojtarchivedfor'] = 'Archived OJT record for {$a}';
 $string['ojtarchivedevidence'] = 'Archived OJT Evidence';
 $string['archiveojt'] = 'Archive OJT';
+// HWRHAS-162
+$string['saveallonsubmit'] = 'Save evaluation data on form submit';
+$string['saveallonsubmit_help'] = 'When checked, while evaluating the learner, all form data will be saved on form submit instead of individually.';
+$string['submit'] = 'Submit';
