@@ -28,25 +28,18 @@ $completionstatus = required_param('completionstatus', PARAM_INT);
 
 switch($completionstatus) {
     case OJT_INCOMPLETE:
-        $module_completion_status = COMPLETION_INCOMPLETE;
+        $module_completion_status = OJT_COMPLETION_INCOMPLETE;
         break;
     case OJT_COMPLETE:
-        $module_completion_status = COMPLETION_COMPLETE;
+        $module_completion_status = OJT_COMPLETION_COMPLETE;
         break;
     case OJT_FAILED:
-        $module_completion_status = COMPLETION_COMPLETE_FAIL;
+        $module_completion_status = OJT_COMPLETION_FAILED;
         break;
 }
 
-$completion = ojt_update_completion($userid, $ojtid, $completionstatus);
+$completion = ojt_update_completion($userid, $ojtid, $module_completion_status);
 
-$ojt = $DB->get_record('ojt', array('id' => $ojtid), '*', MUST_EXIST);
-$course = $DB->get_record('course', array('id' => $ojt->course), '*', MUST_EXIST);
-$cm = get_coursemodule_from_instance('ojt', $ojt->id, $ojt->course, false, MUST_EXIST);
-$ccompletion = new completion_info($course);
-if ($ccompletion->is_enabled($cm)) {
-    $ccompletion->update_state($cm, $module_completion_status, $userid);
-}
 echo json_encode(
     array(
         'msg' => 'success',

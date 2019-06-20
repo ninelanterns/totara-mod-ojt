@@ -49,6 +49,17 @@ define('OJT_COMPLETE', 2);
 define('OJT_FAILED', 3);
 
 /**
+ * OJT completion statuses text
+ * HWRHAS-159
+ * Because passing zero to ojt_update_completion to force other completion status
+ * resolved as null
+ */
+define('OJT_COMPLETION_INCOMPLETE', 'incomplete');
+define('OJT_COMPLETION_REQUIREDCOMPLETE', 'requiredcomplete');
+define('OJT_COMPLETION_COMPLETE', 'complete');
+define('OJT_COMPLETION_FAILED', 'failed');
+
+/**
  * OJT completion requirements
  */
 define('OJT_REQUIRED', 0);

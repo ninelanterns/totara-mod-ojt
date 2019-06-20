@@ -247,12 +247,17 @@ function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status 
     }
 
     $transaction = $DB->start_delegated_transaction();
+    
+    if(!empty($tutor_forced_completion_status)) {
+        $status = ojt_completion_status_text_to_int($tutor_forced_completion_status);
+    }
+    
     $currentcompletion = $DB->get_record('ojt_completion',
         array('userid' => $userid, 'ojtid' => $ojtid, 'type' => OJT_CTYPE_OJT));
     if (empty($currentcompletion->status) || $status != $currentcompletion->status) {
         // Update ojt completion
         $completion = empty($currentcompletion) ? new stdClass() : $currentcompletion;
-        $completion->status = !empty($tutor_forced_completion_status) ? $tutor_forced_completion_status : $status;
+        $completion->status = $status;
         $completion->timemodified = time();
         $completion->modifiedby = $USER->id;
         if (empty($currentcompletion)) {
@@ -263,7 +268,6 @@ function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status 
         } else {
             $DB->update_record('ojt_completion', $completion);
         }
-
         // Update activity completion state
         ojt_update_activity_completion($ojtid, $userid, $status);
     }
@@ -283,10 +287,17 @@ function ojt_update_activity_completion($ojtid, $userid, $ojtstatus) {
         $cm = get_coursemodule_from_instance('ojt', $ojt->id, $ojt->course, false, MUST_EXIST);
         $ccompletion = new completion_info($course);
         if ($ccompletion->is_enabled($cm)) {
-            if (in_array($ojtstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))) {
-                $ccompletion->update_state($cm, COMPLETION_COMPLETE, $userid);
+            // KINEO CCM
+            // If manual completion has been set, then this will throw an error
+            $cm->completion = COMPLETION_TRACKING_AUTOMATIC;
+            if($ojtstatus == OJT_FAILED) {
+                $ccompletion->update_state($cm, COMPLETION_COMPLETE_FAIL, $userid);
             } else {
-                $ccompletion->update_state($cm, COMPLETION_INCOMPLETE, $userid);
+                if (in_array($ojtstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))) {
+                    $ccompletion->update_state($cm, COMPLETION_COMPLETE, $userid);
+                } else {
+                    $ccompletion->update_state($cm, COMPLETION_INCOMPLETE, $userid);
+                }
             }
         }
     }
@@ -479,4 +490,28 @@ function ojt_get_topic_items_by_ojtid($ojtid) {
         ";
     
     return $DB->get_records_sql($sql, array('ojtid' => $ojtid));
+}
+
+
+/**
+ * HWRHAS-159
+ * 
+ * @param type $completion_status
+ * @return type
+ */
+function ojt_completion_status_text_to_int($completion_status) {
+    switch($completion_status) {
+        case OJT_COMPLETION_INCOMPLETE:
+            return OJT_INCOMPLETE;
+            break;
+        case OJT_COMPLETION_COMPLETE:
+            return OJT_COMPLETE;
+            break;
+        case OJT_COMPLETION_FAILED:
+            return OJT_FAILED;
+            break;
+        case OJT_COMPLETION_REQUIREDCOMPLETE:
+            return OJT_REQUIREDCOMPLETE;
+            break;
+    }
 }
