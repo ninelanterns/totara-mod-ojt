@@ -46,8 +46,20 @@ define('OJT_CTYPE_TOPICITEM', 2);
 define('OJT_INCOMPLETE', 0);
 define('OJT_REQUIREDCOMPLETE', 1);
 define('OJT_COMPLETE', 2);
+define('OJT_FAILED', 3);
 define('OJT_NOT_COMPETENT', 3); // LOTHS-200 KINEO CCM
 define('OJT_READY_EVALUATION', 4); // ALDHAS-291 Adding filter for Ready Evaluation Status
+
+/**
+ * OJT completion statuses text
+ * HWRHAS-159
+ * Because passing zero to ojt_update_completion to force other completion status
+ * resolved as null
+ */
+define('OJT_COMPLETION_INCOMPLETE', 'incomplete');
+define('OJT_COMPLETION_REQUIREDCOMPLETE', 'requiredcomplete');
+define('OJT_COMPLETION_COMPLETE', 'complete');
+define('OJT_COMPLETION_FAILED', 'failed');
 
 /**
  * OJT completion requirements
@@ -675,83 +687,4 @@ function is_ojt_in_progress($userid, $ojtid,$topicid = false) {
     return $DB->get_records('ojt_completion', $params);
 }
 
-/**
- * A centralised function to get topics so that we can display them according to their sort position 
- * 
- * @global type $DB
- * @param type $ojtid
- * @return object topics
- */
-function ojt_get_topics($ojtid) {
-    global $DB;
-    
-    $topics_sql = "SELECT * 
-                    FROM {ojt_topic} 
-                   WHERE ojtid = :ojtid 
-                ORDER BY position ASC
-                ";
-    $topics = $DB->get_records_sql($topics_sql, array('ojtid' => $ojtid));
-    
-    return $topics;
-}
-
-/**
- * Get ojt completion info
- * 
- * @global type $DB
- * @param type $userid
- * @param type $ojtid
- * @return type
- */
-function ojt_get_completion_info($userid, $ojtid) {
-    global $DB;
-    
-    $sql = "SELECT oc.*
-              FROM {modules} m
-              JOIN {course_modules} cm
-                ON m.id = cm.module
-              JOIN {ojt_completion} oc
-                ON oc.ojtid = cm.instance
-             WHERE m.name = :modulename
-               AND oc.type = :type
-               AND oc.userid = :userid
-               AND oc.ojtid = :ojtid
-        ";
-    
-    $params = array(
-        'modulename' => 'ojt',
-        'type' => OJT_CTYPE_OJT, // zero indicates, this is the record for main ojt completion
-        'userid' => $userid,
-        'ojtid' => $ojtid
-    );
-    
-    return $DB->get_record_sql($sql, $params);
-}
-
-/**
- * Get course module info
- * 
- * @global type $DB
- * @param type $ojtid
- * @return type
- */
-function ojt_get_course_module($ojtid) {
-    global $DB;
-    
-    $sql = "SELECT cm.*
-              FROM {course_modules} cm
-              JOIN {modules} m
-                ON m.id = cm.module
-              JOIN {ojt} ojt
-                ON ojt.id = cm.instance
-             WHERE m.name = :modulename
-               AND ojt.id = :ojtid
-            ";
-    
-    $params = array(
-        'modulename' => 'ojt',
-        'ojtid' => $ojtid
-    );
-    
-    return $DB->get_record_sql($sql, $params);
-}
+// END - KINEO CCM
