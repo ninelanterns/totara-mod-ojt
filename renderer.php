@@ -652,6 +652,9 @@ class mod_ojt_renderer extends plugin_renderer_base {
             )
         );
         
+        // evaluator id for witness etc 
+        $out .= html_writer::tag('input', null, array('name' => 'evaluatorid', 'value' => $USER->id, 'type' => 'hidden'));
+        
         $out .= html_writer::end_tag('form'); // mod-ojt-user-evaluate-form
         
         $out .= html_writer::end_tag('div');  // mod-ojt-user-ojt

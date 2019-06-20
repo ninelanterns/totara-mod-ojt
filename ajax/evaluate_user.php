@@ -20,7 +20,7 @@ require_once($CFG->dirroot . '/mod/ojt/locallib.php');
 require_once($CFG->dirroot . '/lib/completionlib.php');
 require_once($CFG->dirroot . '/completion/classes/helper.php');
 
-global $DB, $USER;
+global $DB;
 
 $status = optional_param('topicitems_status', null, PARAM_INT);
 $witnessed = optional_param('topicitems_witnessed', null, PARAM_INT);
@@ -28,8 +28,9 @@ $signoff = optional_param('topicitems_signoff', null, PARAM_INT);
 $comments = optional_param('comments', null, PARAM_TEXT);
 $signoffenabled = optional_param('signoffenabled', null, PARAM_INT);
 $witnessenabled = optional_param('witnessenabled', null, PARAM_INT);
-$learnerid = required_param('learnerid', null, PARAM_INT);
-$ojtid = required_param('ojtid', null, PARAM_INT);
+$learnerid = required_param('learnerid', PARAM_INT);
+$ojtid = required_param('ojtid', PARAM_INT);
+$evaluatorid = required_param('evaluatorid', PARAM_INT);
 
 // date format
 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
@@ -38,13 +39,13 @@ $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
 $ojt_topic_items = ojt_get_topic_items_by_ojtid($ojtid);
 if(!empty($ojt_topic_items)) {
     foreach ($ojt_topic_items as $item) {
-        $item_status = !empty($status[$item->id]) ? OJT_COMPLETE : OJT_INCOMPLETE;
+        $item_status = in_array($item->id, $status) ? OJT_COMPLETE : OJT_INCOMPLETE;
         $completion_record = $DB->get_record('ojt_completion', 
             array(
                 'ojtid' => $ojtid,
                 'userid' => $learnerid,
                 'type' => OJT_CTYPE_TOPICITEM,
-                'topicitemid' => $topicitemid
+                'topicitemid' => $item->id
             )
         );
         if(!empty($completion_record)) {
@@ -56,7 +57,7 @@ if(!empty($ojt_topic_items)) {
                     $comments[$item->id] . ' - ' . userdate(time(), $dateformat) . '.' : 
                     null;
             $completion_record->timemodified = time();
-            $completion_record->modifiedby = $USER->id;
+            $completion_record->modifiedby = $evaluatorid;
             
             $DB->update_record('ojt_completion', $completion_record);
         } else {
@@ -71,7 +72,7 @@ if(!empty($ojt_topic_items)) {
                     $comments[$item->id] . ' - ' . userdate(time(), $dateformat) . '.' : 
                     null;
             $completion_record->timemodified = time();
-            $completion_record->modifiedby = $USER->id;
+            $completion_record->modifiedby = $evaluatorid;
             
             $DB->insert_record('ojt_completion', $completion_record);
         }
@@ -83,7 +84,7 @@ if(!empty($ojt_topic_items)) {
                 'topicitemid' => $item->id
             ));
             if(!empty($item_witnessed)) {
-                $item_witnessed->witnessedby = $USER->id;
+                $item_witnessed->witnessedby = $evaluatorid;
                 $item_witnessed->timewitnessed = time();
                 
                 $DB->update_record('ojt_item_witness', $item_witnessed);
@@ -91,7 +92,7 @@ if(!empty($ojt_topic_items)) {
                 $item_witnessed = new stdClass();
                 $item_witnessed->userid = $learnerid;
                 $item_witnessed->topicitemid = $item->id;
-                $item_witnessed->witnessedby = $USER->id;
+                $item_witnessed->witnessedby = $evaluatorid;
                 $item_witnessed->timewitnessed = time();
                 
                 $DB->insert_record('ojt_item_witness', $item_witnessed);
@@ -115,9 +116,11 @@ if(!empty($signoffenabled)) {
         // else add as new record
         $signedoff = new stdClass();
         $signedoff->userid = $learnerid;
-        $signedoff->topicitemid = $sf;
-        $signedoff->witnessedby = $USER->id;
-        $signedoff->timewitnessed = time();
+        $signedoff->topicid = $sf;
+        $signedoff->signedoff = 1;
+        $signedoff->comment = null;
+        $signedoff->timemodified = time();
+        $signedoff->modifiedby = $evaluatorid;
         
         $DB->insert_record('ojt_topic_signoff', $signedoff);
     }
@@ -130,3 +133,11 @@ if(!empty($ojt_topics)) {
         ojt_update_topic_completion($learnerid, $ojtid, $topic->id);
     }
 }
+
+echo json_encode(
+    array(
+        'msg' => 'success',
+        'status' => true
+    )
+);
+exit();

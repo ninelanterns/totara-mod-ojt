@@ -237,6 +237,19 @@ ul.ojt-sortable-topics li.ui-sortable-handle.ui-sortable-helper {
     color: #ffffff;
     font-size: 28px;
 }
+/* Begin HWRHAS-159*/
+.modal-backdrop {
+    z-index: 3025;
+}
+#ojt-confirm-completion-status-modal {
+    z-index: 3050;
+}
+#ojt-confirm-completion-status-modal .modal-dialog {
+    width: 600px !important;
+    margin: 30px auto;
+    display: block;
+} 
+/* End HWRHAS-159*/
 @media print {
     @page {
         margin: 25mm !important;
