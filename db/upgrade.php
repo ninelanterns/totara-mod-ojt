@@ -41,7 +41,7 @@ defined('MOODLE_INTERNAL') || die();
  */
 function xmldb_ojt_upgrade($oldversion) {
     global $DB;
-
+    
     $dbman = $DB->get_manager(); // Loads ddl manager and xmldb classes.
 
     if ($oldversion < 2016031400) {
@@ -167,6 +167,43 @@ function xmldb_ojt_upgrade($oldversion) {
 
         // ojt savepoint reached.
         upgrade_mod_savepoint(true, 2017011108, 'ojt');
+    }
+    
+    // KINEO CCM HWRHAS-161
+    if ($oldversion < 2017011109) {
+        global  $CFG;
+        require_once($CFG->dirroot.'/mod/ojt/lib.php');
+        
+        $table = new xmldb_table('ojt_topic_item');
+
+        // Define field saveallonsubmit to be added to ojt_topic_item.
+        $field = new xmldb_field('type', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'name');
+        // Conditionally launch add field type.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+        // Define field saveallonsubmit to be added to ojt_topic_item.
+        $field = new xmldb_field('other', XMLDB_TYPE_TEXT, '', null, null, null, null, 'position');
+        // Conditionally launch add field other.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        
+        // update ojt_topic_item
+        // set the type for existing items as text - OJT_QUESTION_TYPE_TEXT
+        $rs = $DB->get_recordset('ojt_topic_item');
+
+        foreach($rs as $record) {
+            if(!empty($record)) {
+                $record->type = OJT_QUESTION_TYPE_TEXT;
+                $DB->update_record('ojt_topic_item', $record);
+            }
+        }
+        $rs->close();
+
+        // ojt savepoint reached.
+        upgrade_mod_savepoint(true, 2017011109, 'ojt');
     }
     
     return true;

@@ -269,15 +269,23 @@ function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status 
             $DB->update_record('ojt_completion', $completion);
         }
         // Update activity completion state
-        ojt_update_activity_completion($ojtid, $userid, $status);
+        ojt_update_activity_completion($ojtid, $userid, $status, $tutor_forced_completion_status);
     }
     $transaction->allow_commit();
 
     return empty($completion) ? $currentcompletion : $completion;
 }
 
-
-function ojt_update_activity_completion($ojtid, $userid, $ojtstatus) {
+/**
+ * KINEO CCM $tutor_forced_completion_status
+ * 
+ * @global type $DB
+ * @param type $ojtid
+ * @param type $userid
+ * @param type $ojtstatus
+ * @param type $tutor_forced_completion_status
+ */
+function ojt_update_activity_completion($ojtid, $userid, $ojtstatus, $tutor_forced_completion_status = null) {
     global $DB;
 
     $ojt = $DB->get_record('ojt', array('id' => $ojtid), '*', MUST_EXIST);
@@ -288,10 +296,13 @@ function ojt_update_activity_completion($ojtid, $userid, $ojtstatus) {
         $ccompletion = new completion_info($course);
         if ($ccompletion->is_enabled($cm)) {
             // KINEO CCM
-            // If manual completion has been set, then this will throw an error
-            $cm->completion = COMPLETION_TRACKING_AUTOMATIC;
-            if($ojtstatus == OJT_FAILED) {
-                $ccompletion->update_state($cm, COMPLETION_COMPLETE_FAIL, $userid);
+            // if manually forced completion status update
+            if(!empty($tutor_forced_completion_status)) {
+                if ($ojtstatus == OJT_FAILED) {
+                    ojt_update_state_manual($cm, COMPLETION_COMPLETE_FAIL, $userid, $ccompletion);
+                } else {
+                    ojt_update_state_manual($cm, COMPLETION_COMPLETE, $userid, $ccompletion);
+                }
             } else {
                 if (in_array($ojtstatus, array(OJT_COMPLETE, OJT_REQUIREDCOMPLETE))) {
                     $ccompletion->update_state($cm, COMPLETION_COMPLETE, $userid);
@@ -301,6 +312,61 @@ function ojt_update_activity_completion($ojtid, $userid, $ojtstatus) {
             }
         }
     }
+}
+
+/**
+ * Clone of update_state function in completionlib
+ * To handle this tricky completion
+ * 
+ * @global type $USER
+ * @global type $DB
+ * @param type $cm
+ * @param type $possibleresult
+ * @param type $userid
+ * @return type
+ */
+function ojt_update_state_manual($cm, $possibleresult, $userid, $ccompletion) {
+    global $USER, $DB;
+    
+    // Do nothing if completion is not enabled for that activity
+    if (!$ccompletion->is_enabled($cm)) {
+        return;
+    }
+    
+    $current = $ccompletion->get_data($cm, false, $userid);
+    
+    $newstate = $possibleresult;
+
+    // If changed, update
+    if ($newstate != $current->completionstate) {
+        $current->completionstate = $newstate;
+        $current->timemodified    = time();
+        // If module_get_completion_state set time of completion then use it.
+        if (isset($cm->timecompleted)) {
+            $current->timecompleted = ($newstate == COMPLETION_INCOMPLETE) ? null : $cm->timecompleted;
+        }
+        // TOTARA - Whether or not this was 0 before, it should be 0 now as no reaggregation is necessary after this.
+        $current->reaggregate = 0;
+        $ccompletion->internal_set_data($cm, $current);
+    }
+
+    // Notify course completion.
+    if (in_array($newstate, array(COMPLETION_COMPLETE, COMPLETION_COMPLETE_PASS, COMPLETION_COMPLETE_FAIL))) {
+        $userid = $userid ? $userid : $USER->id;
+        $event = \totara_core\event\module_completion::create(
+            array(
+                'other' => array(
+                        'moduleinstance' => $cm->id,
+                        'userid' => $userid,
+                        'course' => $cm->course,
+                        'criteriatype' => COMPLETION_CRITERIA_TYPE_ACTIVITY,
+                        'module' => $DB->get_field('modules', 'name', array('id' => $cm->module)),
+                        ),
+            )
+        );
+        $event->trigger();
+    }
+    
 }
 
 /**

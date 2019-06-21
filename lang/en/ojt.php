@@ -55,6 +55,8 @@ $string['completionstatus'] = 'Completion status';
 $string['completionstatus0'] = 'Incomplete';
 $string['completionstatus1'] = 'Required complete';
 $string['completionstatus2'] = 'Complete';
+// HWRHAS-1599
+$string['completionstatus3'] = 'Training required';
 $string['completiontopics'] = 'All required topics are complete and, if enabled, witnessed.';
 $string['confirmtopicdelete'] = 'Are you sure you want to delete this topic?';
 $string['confirmitemdelete'] = 'Are you sure you want to delete this topic item?';
@@ -122,3 +124,6 @@ $string['archiveojt'] = 'Archive OJT';
 $string['saveallonsubmit'] = 'Save evaluation data on form submit';
 $string['saveallonsubmit_help'] = 'When checked, while evaluating the learner, all form data will be saved on form submit instead of individually.';
 $string['submit'] = 'Submit';
+// HWRHAS-161
+$string['menuoptions'] = 'Menu options';
+$string['menuoptions'] = '';

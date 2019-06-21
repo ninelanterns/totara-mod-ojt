@@ -258,6 +258,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 dataType: 'json',
                 success: function(data) {
                     if(data.status) {
+                        $('#ojt-confirmation-loading').hide();
                         location.reload();
                     }
                 },
@@ -284,6 +285,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
                 dataType: 'json',
                 success: function(data) {
                     if(data.status) {
+                        $('#ojt-confirmation-loading').hide();
                         location.reload();
                     }
                 },

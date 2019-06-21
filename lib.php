@@ -50,6 +50,7 @@ define('OJT_FAILED', 3);
 
 /**
  * OJT completion statuses text
+ * KINEO CCM
  * HWRHAS-159
  * Because passing zero to ojt_update_completion to force other completion status
  * resolved as null
@@ -64,6 +65,14 @@ define('OJT_COMPLETION_FAILED', 'failed');
  */
 define('OJT_REQUIRED', 0);
 define('OJT_OPTIONAL', 1);
+
+
+/**
+ * KINEO CCM
+ * HWRHAS-161
+ */
+define('OJT_QUESTION_TYPE_TEXT', 1);
+define('OJT_QUESTION_TYPE_DROPDOWN', 2);
 
 /* Moodle core API */
 
@@ -178,6 +187,10 @@ function ojt_delete_instance($id) {
 
     // Delete topics
     $DB->delete_records('ojt_topic', array('ojtid' => $ojt->id));
+    
+    // KINEO CCM
+    // Delete ojt archives
+    $DB->delete_records('ojt_archives', array('ojtid' => $ojt->id));
 
     // Finally, delete the ojt ;)
     $DB->delete_records('ojt', array('id' => $ojt->id));
@@ -292,10 +305,10 @@ function ojt_get_completion_state($course, $cm, $userid, $type) {
     if (empty($ojt->completiontopics)) {
         return $type;
     }
-
+    
     return $DB->record_exists_select('ojt_completion',
-        'ojtid = ? AND userid =? AND type = ? AND status IN (?, ?)',
-        array($ojt->id, $userid, OJT_CTYPE_OJT, OJT_COMPLETE, OJT_REQUIREDCOMPLETE));
+        'ojtid = ? AND userid =? AND type = ? AND status IN (?, ?, ?)',
+        array($ojt->id, $userid, OJT_CTYPE_OJT, OJT_COMPLETE, OJT_REQUIREDCOMPLETE, OJT_FAILED));
 
 }
 
