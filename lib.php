@@ -52,6 +52,7 @@ define('OJT_READY_EVALUATION', 4); // ALDHAS-291 Adding filter for Ready Evaluat
 
 /**
  * OJT completion statuses text
+ * KINEO CCM
  * HWRHAS-159
  * Because passing zero to ojt_update_completion to force other completion status
  * resolved as null
@@ -66,6 +67,14 @@ define('OJT_COMPLETION_FAILED', 'failed');
  */
 define('OJT_REQUIRED', 0);
 define('OJT_OPTIONAL', 1);
+
+
+/**
+ * KINEO CCM
+ * HWRHAS-161
+ */
+define('OJT_QUESTION_TYPE_TEXT', 1);
+define('OJT_QUESTION_TYPE_DROPDOWN', 2);
 
 /* Moodle core API */
 
@@ -180,6 +189,10 @@ function ojt_delete_instance($id) {
 
     // Delete topics
     $DB->delete_records('ojt_topic', array('ojtid' => $ojt->id));
+    
+    // KINEO CCM
+    // Delete ojt archives
+    $DB->delete_records('ojt_archives', array('ojtid' => $ojt->id));
 
     // Finally, delete the ojt ;)
     $DB->delete_records('ojt', array('id' => $ojt->id));

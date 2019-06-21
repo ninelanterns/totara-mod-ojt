@@ -57,6 +57,9 @@ $string['completionstatus0'] = 'In progress';
 $string['completionstatus1'] = 'Required complete';
 $string['completionstatus2'] = 'Complete';
 $string['completionstatus4'] = 'Ready for Evaluation';
+// HWRHAS-1599
+$string['completionstatus3'] = 'Training required';
+
 $string['completiontopics'] = 'All required topics are complete and, if enabled, witnessed.';
 $string['completionmanagersignoff'] = 'All required topics are signed off by the manager.';
 $string['confirmtopicdelete'] = 'Are you sure you want to delete this topic?';
