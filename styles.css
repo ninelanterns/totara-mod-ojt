@@ -250,6 +250,15 @@ ul.ojt-sortable-topics li.ui-sortable-handle.ui-sortable-helper {
     display: block;
 } 
 /* End HWRHAS-159*/
+/* Beging HWRHAS-161*/
+.ojtaddtopic-dropdown {
+    display: inline;
+    margin-left: 10px;;
+}
+.dropdown.ojtaddtopic-dropdown .caret {
+    margin-left: 10px;
+}
+/* END HWRHAS-161*/
 @media print {
     @page {
         margin: 25mm !important;

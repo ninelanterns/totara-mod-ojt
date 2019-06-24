@@ -126,4 +126,6 @@ $string['saveallonsubmit_help'] = 'When checked, while evaluating the learner, a
 $string['submit'] = 'Submit';
 // HWRHAS-161
 $string['menuoptions'] = 'Menu options';
-$string['menuoptions'] = '';
+$string['menuoptions_help'] = 'Enter menu options in a new line.';
+$string['textquestion'] = 'Text question';
+$string['menuquestion'] = 'Menu question';
