@@ -53,8 +53,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ? ' ('.get_string('optional', 'ojt').')' : '';
             $out .= format_string($topic->name).$optionalstr;
             if ($config) {
-                $additemurl = new moodle_url('/mod/ojt/topicitem.php', array('bid' => $ojt->id, 'tid' => $topic->id));
-                $out .= $this->output->action_icon($additemurl, new flex_icon('plus', ['alt' => get_string('additem', 'ojt')]));
+                $out .= $this->render_add_topics_dropdown($ojt->id, $topic->id);
                 $editurl = new moodle_url('/mod/ojt/topic.php', array('bid' => $ojt->id, 'id' => $topic->id));
                 $out .= $this->output->action_icon($editurl, new flex_icon('edit', ['alt' => get_string('edittopic', 'ojt')]));
                 $deleteurl = new moodle_url('/mod/ojt/topic.php', array('bid' => $ojt->id, 'id' => $topic->id, 'delete' => 1));
@@ -117,6 +116,34 @@ class mod_ojt_renderer extends plugin_renderer_base {
         // close modal
         $out .= html_writer::end_div();
         // END KINEO CCM
+        
+        return $out;
+    }
+    
+    /**
+     * KINEO CCM 
+     * To add a dropdown to add 2 links for menu type questions and default text type question
+     * 
+     * @param type $ojtid
+     * @param type $topicid
+     */
+    function render_add_topics_dropdown($ojtid, $topicid) {
+        $additemtext_url = new moodle_url('/mod/ojt/topicitem.php', array('bid' => $ojtid, 'tid' => $topicid, 'type' => OJT_QUESTION_TYPE_TEXT));
+        $additemmenu_url = new moodle_url('/mod/ojt/topicitem.php', array('bid' => $ojtid, 'tid' => $topicid, 'type' => OJT_QUESTION_TYPE_DROPDOWN));
+        
+        $out = html_writer::start_div('dropdown ojtaddtopic-dropdown');
+            $out .= html_writer::tag('button',
+                    get_string('additem', 'mod_ojt') . html_writer::span(null, 'caret'),
+                    array(
+                        'class' => 'btn btn-default dropdown-toggle',
+                        'type' => 'button',
+                        'data-toggle' => 'dropdown'
+                        ));
+            $out .= html_writer::start_tag('ul', array('class' => 'dropdown-menu'));
+                $out .= html_writer::tag('li', html_writer::link($additemtext_url, get_string('textquestion', 'mod_ojt')));
+                $out .= html_writer::tag('li', html_writer::link($additemmenu_url, get_string('menuquestion', 'mod_ojt')));
+            $out .= html_writer::end_tag('ul'); // dropdown
+        $out .= html_writer::end_div(); // dropdown
         
         return $out;
     }
@@ -461,9 +488,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
      */
     function user_ojt_save_on_submission($userojt, $evaluate=false, $signoff=false, $itemwitness=false) {
         global $CFG, $DB, $USER, $PAGE;
-        
-        //var_dump($userojt);
-
+  
         $out = '';
         $out = html_writer::start_tag('div', array('id' => 'mod-ojt-user-ojt'));
         
@@ -547,20 +572,26 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     //$completionicon = $item->status == OJT_COMPLETE ? 'completion-manual-y' : 'completion-manual-n';
                     $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
                     //$cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle-no-click']);
-                    $completion_param =  array(
-                        'type' => 'checkbox',
-                        'name' => 'topicitems_status[]',
-                        'value' => $item->id
-                    );
-                    if($item->status == OJT_COMPLETE) {
-                        $completion_param['checked'] = 'checked';
-                    }
-                    $cellcontent .= html_writer::tag('input',null, $completion_param);
-                    $cellcontent .= html_writer::tag('textarea', $item->comment,
-                        array('name' => "comments[$item->id]", 'rows' => 3,
-                            'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
-                    $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
+                    if($item->type == OJT_QUESTION_TYPE_TEXT) {
+                        $completion_param =  array(
+                            'type' => 'checkbox',
+                            'name' => 'topicitems_status[]',
+                            'value' => $item->id
+                        );
+                        if($item->status == OJT_COMPLETE) {
+                            $completion_param['checked'] = 'checked';
+                        }
+                        $cellcontent .= html_writer::tag('input',null, $completion_param);
+                        $cellcontent .= html_writer::tag('textarea', $item->comment,
+                            array('name' => "comments[$item->id]", 'rows' => 3,
+                                'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
+                        $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
                         array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
+                    } else {
+                        // dorpdown menu type
+                        $cellcontent .= $this->render_menu_question_options($item);
+                    }
+                            
                     $cellcontent .= html_writer::end_tag('div');
                 } else {
                     // Show static stuff.
@@ -697,6 +728,31 @@ class mod_ojt_renderer extends plugin_renderer_base {
         
         $out .= html_writer::end_tag('div');  // mod-ojt-user-ojt
 
+        return $out;
+    }
+    
+    /**
+     * Return select dorpdown for menu type question
+     *  
+     * @param type $item
+     * @return string
+     */
+    function render_menu_question_options($item) {
+        $options = $item->other;
+        if(empty($options)) {
+            return '';
+        }
+        $options_array = explode("\n", $options);
+        $out = html_writer::start_tag('select', array('name' => 'menuoptions['.$item->id.']'));
+        foreach($options_array as $option) {
+            $params = array('value' => $option);
+            if(trim($option) == trim($item->comment)) {
+                $params['selected'] = true;
+            }
+            $out .= html_writer::tag('option', $option, $params);
+        }
+        $out .= html_writer::end_tag('select');
+        
         return $out;
     }
 }

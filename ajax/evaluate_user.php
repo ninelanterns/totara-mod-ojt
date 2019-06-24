@@ -30,6 +30,7 @@ $signoffenabled = optional_param('signoffenabled', null, PARAM_INT);
 $witnessenabled = optional_param('witnessenabled', null, PARAM_INT);
 $learnerid = required_param('learnerid', null, PARAM_INT);
 $ojtid = required_param('ojtid', null, PARAM_INT);
+$menuoptions = optional_param('menuoptions', null, PARAM_TEXT);
 
 // date format
 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
@@ -38,7 +39,14 @@ $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
 $ojt_topic_items = ojt_get_topic_items_by_ojtid($ojtid);
 if(!empty($ojt_topic_items)) {
     foreach ($ojt_topic_items as $item) {
-        $item_status = !empty($status[$item->id]) ? OJT_COMPLETE : OJT_INCOMPLETE;
+        $item_status = in_array($item->id, $status) ? OJT_COMPLETE : OJT_INCOMPLETE;
+        // HWRHAS-161
+        $item_status = OJT_INCOMPLETE;
+        if(!empty($menuoptions[$item->id])) {
+            $item_status =  OJT_COMPLETE;
+        } else {
+            $item_status = in_array($item->id, $status) ? OJT_COMPLETE : OJT_INCOMPLETE;
+        }
         $completion_record = $DB->get_record('ojt_completion', 
             array(
                 'ojtid' => $ojtid,
@@ -47,32 +55,33 @@ if(!empty($ojt_topic_items)) {
                 'topicitemid' => $item->id
             )
         );
-        if(!empty($completion_record)) {
-            // get record and update
-            // highly unlikely if the OJT has been set up properly
-            // with saveallonsubmit checked on mod_form.php
-            $completion_record->status = $item_status;
-            $completion_record->comment = !empty($comments[$item->id]) ? 
-                    $comments[$item->id] . ' - ' . userdate(time(), $dateformat) . '.' : 
-                    null;
-            $completion_record->timemodified = time();
-            $completion_record->modifiedby = $USER->id;
-            
-            $DB->update_record('ojt_completion', $completion_record);
-        } else {
+        if(empty($completion_record)) {
             $completion_record = new stdClass();
             $completion_record->userid = $learnerid;
             $completion_record->type = OJT_CTYPE_TOPICITEM;
             $completion_record->ojtid = $ojtid;
             $completion_record->topicid = $item->topicid;
             $completion_record->topicitemid = $item->id;
-            $completion_record->status = $item_status;
+        } 
+        
+        $completion_record->status = $item_status;
+        // HWRHAS-161
+        if(!empty($menuoptions[$item->id])) {
+            $completion_record->comment = $menuoptions[$item->id]; 
+        } else {
             $completion_record->comment = !empty($comments[$item->id]) ? 
-                    $comments[$item->id] . ' - ' . userdate(time(), $dateformat) . '.' : 
-                    null;
-            $completion_record->timemodified = time();
-            $completion_record->modifiedby = $USER->id;
-            
+                $comments[$item->id] . ' - ' . userdate(time(), $dateformat) . '.' : 
+                null;
+        }
+        $completion_record->timemodified = time();
+        $completion_record->modifiedby = $USER->id;
+        
+        if(!empty($completion_record->id)) {
+            // get record and update
+            // highly unlikely if the OJT has been set up properly
+            // with saveallonsubmit checked on mod_form.php
+            $DB->update_record('ojt_completion', $completion_record);
+        } else {
             $DB->insert_record('ojt_completion', $completion_record);
         }
         

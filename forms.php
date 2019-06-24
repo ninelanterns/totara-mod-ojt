@@ -85,19 +85,12 @@ class ojt_topic_item_form extends moodleform {
         $mform =& $this->_form;
         $ojtid = $this->_customdata['ojtid'];
         $topicid = $this->_customdata['topicid'];
+        $questiontype = $this->_customdata['type'];
         
-        // KINEO CCM
-        $questiontypes = array(
-            'opentext' => 'Open text',
-            'select' => 'Select'
-        );
-        $mform->addElement('select', 'questiontype', 'Question Type', $questiontypes);
-        $mform->setType('questiontype', PARAM_TEXT);
 
         $mform->addElement('text', 'name', get_string('name', 'ojt'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
-        $mform->disabledIf('name','questiontype','eq', 'select');
 
         $mform->addElement('advcheckbox', 'completionreq', get_string('optionalcompletion', 'ojt'));
 
@@ -115,6 +108,12 @@ class ojt_topic_item_form extends moodleform {
         $mform->addElement('hidden', 'tid');
         $mform->setType('tid', PARAM_INT);
         $mform->setDefault('tid', $topicid);
+        // KINEO CCM
+        // HWRHAS-161
+        $mform->addElement('hidden', 'type');
+        $mform->setType('type', PARAM_TEXT);
+        $mform->setDefault('type', $questiontype);
+        
 
         $this->add_action_buttons(false);
     }
@@ -134,16 +133,19 @@ class ojt_topic_item_menu_question_form extends moodleform {
         $mform =& $this->_form;
         $ojtid = $this->_customdata['ojtid'];
         $topicid = $this->_customdata['topicid'];
+        $questiontype = $this->_customdata['type'];
 
         $mform->addElement('text', 'name', get_string('name', 'ojt'));
         $mform->setType('name', PARAM_TEXT);
         $mform->addRule('name', null, 'required', null, 'client');
         
-        $mform->addElement('textarea', 'menuoptions', get_string('menuoptions', 'ojt'));
+        $mform->addElement('textarea', 'menuoptions', get_string('menuoptions', 'ojt'), array('rows' => 8, 'cols' => 40));
         $mform->setType('menuoptions', PARAM_TEXT);
         $mform->addRule('menuoptions', null, 'required', null, 'client');
         $mform->addHelpButton('menuoptions', 'menuoptions', 'ojt');
-
+        
+        $mform->addElement('advcheckbox', 'completionreq', get_string('optionalcompletion', 'ojt'));
+        
         $mform->addElement('hidden', 'id');
         $mform->setType('id', PARAM_INT);
         $mform->addElement('hidden', 'bid');
@@ -152,6 +154,12 @@ class ojt_topic_item_menu_question_form extends moodleform {
         $mform->addElement('hidden', 'tid');
         $mform->setType('tid', PARAM_INT);
         $mform->setDefault('tid', $topicid);
+        
+        // KINEO CCM
+        // HWRHAS-161
+        $mform->addElement('hidden', 'type');
+        $mform->setType('type', PARAM_TEXT);
+        $mform->setDefault('type', $questiontype);
 
         $this->add_action_buttons(false);
     }
