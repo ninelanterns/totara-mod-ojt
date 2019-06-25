@@ -28,12 +28,13 @@ define('OJT_NOT_ARCHIVED', 0);
  * @global \mod_ojt\type $DB
  * @param type $ojtid
  */
-function ojt_markas_archived($ojtid) {
+function ojt_markas_archived($ojtid, $userid) {
     global $DB;
     
     $ojt = $DB->get_record('ojt_completion', array(
         'type' => OJT_CTYPE_OJT,
-        'ojtid' => $ojtid
+        'ojtid' => $ojtid,
+        'userid' => $userid
     ));
     
     if(!empty($ojt)) {
@@ -45,6 +46,8 @@ function ojt_markas_archived($ojtid) {
 
 /**
  * Get completed ojt
+ * Modified to get failed ojt as well
+ * so any status greater than 2
  * 
  * @global type $DB
  * @return type
@@ -57,7 +60,7 @@ function ojt_get_completed_ojts() {
               JOIN {ojt_completion} oc
                 ON ojt.id = oc.ojtid
              WHERE oc.type = :type
-               AND oc.status = :status
+               AND oc.status > :status
                AND oc.archived = :notarchived
             ";
     $params = array(
@@ -240,7 +243,7 @@ function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid) {
     // update archive with file id
     $DB->update_record('ojt_archives', $archive); 
     // mark ojt as archived
-    ojt_markas_archived($ojtid);
+    ojt_markas_archived($ojtid, $userid);
 }
 
 

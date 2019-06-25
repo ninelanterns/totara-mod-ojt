@@ -254,15 +254,19 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
                 $row[] = format_string($item->name).$optionalstr;
                 if ($evaluate) {
-                    $completionicon = $item->status == OJT_COMPLETE ? 'completion-manual-y' : 'completion-manual-n';
-                    $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
-                    $cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle']);
-                    $cellcontent .= html_writer::tag('textarea', $item->comment,
-                        array('name' => 'comment-'.$item->id, 'rows' => 3,
-                            'class' => 'ojt-completion-comment-no', 'ojt-item-id' => $item->id));
-                    $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
-                        array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
-                    $cellcontent .= html_writer::end_tag('div');
+                    if($item->type == OJT_QUESTION_TYPE_DROPDOWN) {
+                        $cellcontent = $this->render_menu_question_options($item, 'ojt-menu-question-select');
+                    } else {
+                        $completionicon = $item->status == OJT_COMPLETE ? 'completion-manual-y' : 'completion-manual-n';
+                        $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
+                        $cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle']);
+                        $cellcontent .= html_writer::tag('textarea', $item->comment,
+                            array('name' => 'comment-'.$item->id, 'rows' => 3,
+                                'class' => 'ojt-completion-comment-no', 'ojt-item-id' => $item->id));
+                        $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
+                            array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
+                        $cellcontent .= html_writer::end_tag('div');
+                    }
                 } else {
                     // Show static stuff.
                     $cellcontent = '';
@@ -685,7 +689,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
         
         // evaluator id for witness etc 
         $out .= html_writer::tag('input', null, array('name' => 'evaluatorid', 'value' => $USER->id, 'type' => 'hidden'));
-        
+
         $out .= html_writer::end_tag('form'); // mod-ojt-user-evaluate-form
         
         $out .= html_writer::end_tag('div');  // mod-ojt-user-ojt
@@ -699,13 +703,13 @@ class mod_ojt_renderer extends plugin_renderer_base {
      * @param type $item
      * @return string
      */
-    function render_menu_question_options($item) {
+    function render_menu_question_options($item, $additional_class = '') {
         $options = $item->other;
         if(empty($options)) {
             return '';
         }
         $options_array = explode("\n", $options);
-        $out = html_writer::start_tag('select', array('name' => 'menuoptions['.$item->id.']'));
+        $out = html_writer::start_tag('select', array('name' => 'menuoptions['.$item->id.']', 'class' => $additional_class, 'ojt-item-id' => $item->id));
         foreach($options_array as $option) {
             $params = array('value' => $option);
             if(trim($option) == trim($item->comment)) {

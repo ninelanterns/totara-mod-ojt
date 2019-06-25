@@ -90,6 +90,10 @@ if ($completion = $DB->get_record('ojt_completion', $params)) {
             // append a date to the comment string
             $completion->comment .= ' - '.userdate(time(), $dateformat).'.';
             break;
+        case 'savemenuoption':
+            $completion->status = OJT_COMPLETE;
+            $completion->comment = required_param('option', PARAM_TEXT);
+            break;
         default:
     }
     $completion->timemodified = time();

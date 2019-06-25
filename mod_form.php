@@ -71,6 +71,7 @@ class mod_ojt_mod_form extends moodleform_mod {
         // If ticked save all data at once instead of the default method
         $mform->addElement('advcheckbox', 'saveallonsubmit', get_string('saveallonsubmit', 'ojt'));
         $mform->addHelpButton('saveallonsubmit', 'saveallonsubmit', 'ojt');
+        $mform->setDefault('saveallonsubmit',1);
 
         // Add standard grading elements.
         $this->standard_grading_coursemodule_elements();
