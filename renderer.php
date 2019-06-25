@@ -184,7 +184,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $out .= format_string($item->name).$optionalstr;
             if ($config) {
                 $editurl = new moodle_url('/mod/ojt/topicitem.php',
-                    array('bid' => $ojtid, 'tid' => $topicid, 'id' => $item->id));
+                    array('bid' => $ojtid, 'tid' => $topicid, 'id' => $item->id, 'type' => $item->type));
                 $out .= $this->output->action_icon($editurl, new flex_icon('edit', ['alt' => get_string('edititem', 'ojt')]));
                 $deleteurl = new moodle_url('/mod/ojt/topicitem.php',
                     array('bid' => $ojtid, 'tid' => $topicid, 'id' => $item->id, 'delete' => 1));
