@@ -46,6 +46,8 @@ function ojt_markas_archived($ojtid, $userid) {
 
 /**
  * Get completed ojt
+ * Modified to get failed ojt as well
+ * so any status greater than 2
  * 
  * @global type $DB
  * @return type
@@ -58,7 +60,7 @@ function ojt_get_completed_ojts() {
               JOIN {ojt_completion} oc
                 ON ojt.id = oc.ojtid
              WHERE oc.type = :type
-               AND oc.status = :status
+               AND oc.status > :status
                AND oc.archived = :notarchived
             ";
     $params = array(
@@ -197,7 +199,7 @@ function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid) {
     // get ojt
     $ojt = $DB->get_record('ojt', array('id' => $ojtid));
     
-    $title = $ojt->name . ' (' . date('d-m-Y', time()) . ')';
+    $title = $ojt->name;
     $subject = get_string('ojtarchivedfor', 'mod_ojt', fullname($user));
     $filename = clean_filename(fullname($user) . '_' . $ojt->name . '_' . time() .'.pdf');   
     $filename = str_replace(' ', '_', $filename);

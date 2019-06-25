@@ -203,14 +203,45 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             });
         });
         
+        // toggle save when
+        $('.ojt-menu-question-select').change(function () {
+            var commentinput = this;
+            var itemid = $(this).attr('ojt-item-id');
+            $.ajax({
+                url: M.cfg.wwwroot+'/mod/ojt/evaluatesave.php',
+                type: 'POST',
+                data: {
+                    'action': 'savemenuoption',
+                    'bid': config.ojtid,
+                    'userid': config.userid,
+                    'id': itemid,
+                    'option': $(commentinput).val()
+                },
+                success: function(data) {
+                    var data = $.parseJSON(data);
+                    $('.mod-ojt-modifiedstr[ojt-item-id='+itemid+']').html(data.modifiedstr);
+                },
+                error: function (data) {
+                    console.log(data);
+                    alert('Error saving comment...');
+                }
+            });
+        });
+        
         //HWRHAS-159
         // show confirmation dialog
         ojtobj.initConfirmationDialog();
         // init update completion
-        ojtobj.updateCompletionStatus();
+        $('#ojt-confirm-completion-status').click(function() {
+            $('#ojt-confirmation-loading').show();
+            ojtobj.evaluateStudent(ojtobj.updateCompletionStatus);
+        });
         // init evaluate completion
-        ojtobj.evaluateStudent();
-    },  // init
+        $('#mod-ojt-submit-evaluate-btn').click(function() {
+            $('#ojt-confirmation-loading').show();
+            ojtobj.evaluateStudent(ojtobj.reloadPage);
+        });
+    }, 
 
     replaceIcon: function (icon, newiconname) {
     require(['core/templates'], function (templates) {
@@ -257,23 +288,20 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
      * @returns {undefined}
      */
     updateCompletionStatus: function() {
-        $('#ojt-confirm-completion-status').click(function() {
-            $('#ojt-confirmation-loading').show();
-            $.ajax({
-                url: M.cfg.wwwroot+'/mod/ojt/ajax/update_completion_status.php',
-                type: 'POST',
-                data:$('#ojt-update-ojt-completion-status-form').serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    if(data.status) {
-                        location.reload();
-                    }
-                },
-                error: function (data) {
-                    alert('Error updating completion status...');
-                    $('#ojt-confirmation-loading').hide();
+        $.ajax({
+            url: M.cfg.wwwroot+'/mod/ojt/ajax/update_completion_status.php',
+            type: 'POST',
+            data:$('#ojt-update-ojt-completion-status-form').serialize(),
+            dataType: 'json',
+            success: function(data) {
+                if(data.status) {
+                    location.reload();
                 }
-            });
+            },
+            error: function (data) {
+                alert('Error updating completion status...');
+                $('#ojt-confirmation-loading').hide();
+            }
         });
     },
     
@@ -282,25 +310,22 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
      * 
      * @returns {undefined}
      */
-    evaluateStudent: function() {
-        $('#mod-ojt-submit-evaluate-btn').click(function() {
-            $('#ojt-confirmation-loading').show();
-            $.ajax({
-                url: M.cfg.wwwroot+'/mod/ojt/ajax/evaluate_user.php',
-                type: 'POST',
-                data:$('#mod-ojt-user-evaluate-form').serialize(),
-                dataType: 'json',
-                success: function(data) {
-                    if(data.status) {
-                        location.reload();
-                    }
-                },
-                error: function (data) {
-                    alert('Error saving evaluation data...');
-                    $('#ojt-confirmation-loading').hide();
-                }
-            });
+    evaluateStudent: function(callback) {
+        $.ajax({
+            url: M.cfg.wwwroot+'/mod/ojt/ajax/evaluate_user.php',
+            type: 'POST',
+            data:$('#mod-ojt-user-evaluate-form').serialize(),
+            dataType: 'json',
+            success: callback,
+            error: function (data) {
+                alert('Error saving evaluation data...');
+                $('#ojt-confirmation-loading').hide();
+            }
         });
+    },
+    
+    reloadPage: function() {
+        location.reload();
     }
 };
 

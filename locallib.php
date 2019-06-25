@@ -343,9 +343,7 @@ function ojt_update_state_manual($cm, $possibleresult, $userid, $ccompletion) {
         $current->completionstate = $newstate;
         $current->timemodified    = time();
         // If module_get_completion_state set time of completion then use it.
-        if (isset($cm->timecompleted)) {
-            $current->timecompleted = ($newstate == COMPLETION_INCOMPLETE) ? null : $cm->timecompleted;
-        }
+        $current->timecompleted = ($newstate == COMPLETION_INCOMPLETE) ? null : time();
         // TOTARA - Whether or not this was 0 before, it should be 0 now as no reaggregation is necessary after this.
         $current->reaggregate = 0;
         $ccompletion->internal_set_data($cm, $current);

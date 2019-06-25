@@ -120,7 +120,8 @@ if ($ojt->intro) {
 // Print the evaluation
 $renderer = $PAGE->get_renderer('ojt');
 if($userojt->saveallonsubmit) {
-     echo $renderer->user_ojt_save_on_submission($userojt, $canevaluate, $cansignoff, $canwitness);
+    echo $renderer->user_ojt_save_on_submission($userojt, $canevaluate, $cansignoff, $canwitness);
+    echo $renderer->activity_completion_status_dropdown($userojt);
 } else {
     echo $renderer->user_ojt($userojt, $canevaluate, $cansignoff, $canwitness);
 }
