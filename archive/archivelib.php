@@ -53,19 +53,26 @@ function ojt_markas_archived($ojtid, $userid) {
  * @return type
  */
 function ojt_get_completed_ojts() {
-    global $DB;
+    global $DB, $CFG;
+    require_once($CFG->dirroot . '/lib/completionlib.php');
     
     $sql = "SELECT oc.*
-              FROM {ojt} ojt
-              JOIN {ojt_completion} oc
-                ON ojt.id = oc.ojtid
+              FROM {ojt} ojt 
+              JOIN {ojt_completion} oc 
+                ON ojt.id = oc.ojtid 
+              JOIN {course_modules} cm
+                ON cm.instance = ojt.id
+              JOIN {course_modules_completion} cmc
+                ON (cmc.coursemoduleid = cm.id AND cmc.userid = oc.userid)
              WHERE oc.type = :type
-               AND oc.status > :status
                AND oc.archived = :notarchived
-            ";
+               AND cmc.completionstate > :status
+               AND cmc.timecompleted IS NOT NULL
+                ";
+
     $params = array(
         'type' => OJT_CTYPE_OJT,
-        'status' => OJT_COMPLETE,
+        'status' => COMPLETION_INCOMPLETE,
         'notarchived' => OJT_NOT_ARCHIVED
     );
     $completed_ojt = $DB->get_records_sql($sql,$params);
