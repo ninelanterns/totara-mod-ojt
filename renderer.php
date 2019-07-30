@@ -239,10 +239,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ?
                 html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
             $out .= html_writer::tag('div', format_string($topic->name).$optionalstr.$completionicon,
-                array('class' => 'mod-ojt-topic-heading expanded'));
+                array('class' => 'mod-ojt-topic-heading collapsed'));
 
             $table = new html_table();
             $table->attributes['class'] = 'mod-ojt-topic-items generaltable';
+            $table->attributes['style'] = 'display:none;';
             if ($userojt->itemwitness) {
                 $table->head = array('', '', get_string('witnessed', 'mod_ojt'));
             }
@@ -261,7 +262,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
                         $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
                         $cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle']);
                         $cellcontent .= html_writer::tag('textarea', $item->comment,
-                            array('name' => 'comment-'.$item->id, 'rows' => 3,
+                            array('name' => 'comment-'.$item->id, 'rows' => 8, 'cols' => 80,
                                 'class' => 'ojt-completion-comment-no', 'ojt-item-id' => $item->id));
                         $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
                             array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
@@ -517,10 +518,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ?
                 html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
             $out .= html_writer::tag('div', format_string($topic->name).$optionalstr.$completionicon,
-                array('class' => 'mod-ojt-topic-heading expanded'));
+                array('class' => 'mod-ojt-topic-heading collapsed'));
 
             $table = new html_table();
             $table->attributes['class'] = 'mod-ojt-topic-items generaltable';
+            $table->attributes['style'] = 'display:none;';
             if ($userojt->itemwitness) {
                 $table->head = array('', '', get_string('witnessed', 'mod_ojt'));
             }
@@ -546,7 +548,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
                         }
                         $cellcontent .= html_writer::tag('input',null, $completion_param);
                         $cellcontent .= html_writer::tag('textarea', $item->comment,
-                            array('name' => "comments[$item->id]", 'rows' => 3,
+                            array('name' => "comments[$item->id]", 'rows' => 8, 'cols' => 80,
                                 'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
                         $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
                         array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));

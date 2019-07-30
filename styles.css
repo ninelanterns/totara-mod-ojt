@@ -259,6 +259,13 @@ ul.ojt-sortable-topics li.ui-sortable-handle.ui-sortable-helper {
     margin-left: 10px;
 }
 /* END HWRHAS-161*/
+/* Begin HWRHAS-181 */
+.mod-ojt-topic input[type="checkbox"] {
+    height: 20px;
+    width: 20px;
+}
+
+/* End HWRHAS-181 */
 @media print {
     @page {
         margin: 25mm !important;
