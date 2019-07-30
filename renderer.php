@@ -300,7 +300,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
                         $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
                         $cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle']);
                         $cellcontent .= html_writer::tag('textarea', $item->comment,
-                            array('name' => 'comment-'.$item->id, 'rows' => 3,
+                            array('name' => 'comment-'.$item->id, 'rows' => 8, 'cols' => 80,
                                 'class' => 'ojt-completion-comment-no', 'ojt-item-id' => $item->id));
                         $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
                             array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
