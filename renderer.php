@@ -401,9 +401,9 @@ class mod_ojt_renderer extends plugin_renderer_base {
      */
     function activity_completion_status_dropdown($userojt) {
         $ojt_completion_status = array(
-            array('key' => OJT_COMPLETE, 'value' => get_string('achieved', 'mod_ojt')),
-            array('key' => OJT_INCOMPLETE, 'value' => get_string('notachieved', 'mod_ojt')),
-            array('key' => OJT_FAILED, 'value' => get_string('trainingrequired', 'mod_ojt'))
+            array('key' => OJT_COMPLETE, 'value' => get_string('achieved', 'mod_ojt'), 'text' => get_string('achieved_modaltext', 'mod_ojt')),
+            array('key' => OJT_INCOMPLETE, 'value' => get_string('notachieved', 'mod_ojt'), 'text' => get_string('notachieved_modaltext', 'mod_ojt')),
+            array('key' => OJT_FAILED, 'value' => get_string('trainingrequired', 'mod_ojt'), 'text' => get_string('trainingrequired_modaltext', 'mod_ojt'))
         );
         
         $data = new stdClass();
