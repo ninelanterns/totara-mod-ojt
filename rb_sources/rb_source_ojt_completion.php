@@ -527,7 +527,7 @@ class rb_ojt_completion_type_content extends rb_base_content {
         $type = substr(get_class($this), 3);
         $settings = reportbuilder::get_all_settings($reportid, $type);
 
-        return array('base.type = :crbct', array('crbct' => $settings['completiontype']));
+        return array("$field = :crbct", array('crbct' => $settings['completiontype']));
     }
 
     /**
