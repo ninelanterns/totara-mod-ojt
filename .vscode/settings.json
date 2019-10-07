@@ -1,5 +1,0 @@
-{
-    "phpcs.enable": true,
-    "phpcs.standard": "C:/repositories/rplhas/public_html/local/codechecker/moodle/",
-    "git.ignoreLimitWarning": true
-}
