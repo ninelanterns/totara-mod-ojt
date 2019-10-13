@@ -196,7 +196,7 @@ function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid) {
     // get ojt
     $ojt = $DB->get_record('ojt', array('id' => $ojtid));
     
-    $title = $ojt->name;
+    $title = $ojt->name . ' (' . date('d-m-Y', time()) . ')';
     $subject = get_string('ojtarchivedfor', 'mod_ojt', fullname($user));
     $filename = clean_filename(fullname($user) . '_' . $ojt->name . '_' . time() .'.pdf');   
     $filename = str_replace(' ', '_', $filename);

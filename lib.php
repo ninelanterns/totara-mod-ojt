@@ -343,7 +343,7 @@ function ojt_get_completion_state($course, $cm, $userid, $type) {
  * @param int $timestart Print activity since this timestamp
  * @return boolean True if anything was printed, otherwise false
  */
-function ojt_print_recent_activity($course, $viewfullnames, $timestart) {
+function _ojt_print_recent_activity($course, $viewfullnames, $timestart) {
     return false;
 }
 

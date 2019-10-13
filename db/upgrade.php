@@ -122,7 +122,7 @@ function xmldb_ojt_upgrade($oldversion) {
         $table = new xmldb_table('ojt');
 
         // Define field saveallonsubmit to be added to ojt.
-        $field = new xmldb_field('saveallonsubmit', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'allowselfevaluation');
+        $field = new xmldb_field('saveallonsubmit', XMLDB_TYPE_INTEGER, '4', null, null, null, '0', 'itemwitness');
 
         // Conditionally launch add field saveallonsubmit.
         if (!$dbman->field_exists($table, $field)) {

@@ -28,8 +28,8 @@ $signoff = optional_param('topicitems_signoff', null, PARAM_INT);
 $comments = optional_param('comments', null, PARAM_TEXT);
 $signoffenabled = optional_param('signoffenabled', null, PARAM_INT);
 $witnessenabled = optional_param('witnessenabled', null, PARAM_INT);
-$learnerid = required_param('learnerid', null, PARAM_INT);
-$ojtid = required_param('ojtid', null, PARAM_INT);
+$learnerid = required_param('learnerid', PARAM_INT);
+$ojtid = required_param('ojtid', PARAM_INT);
 
 // date format
 $dateformat = get_string('strftimedatetimeshort', 'core_langconfig');
@@ -44,7 +44,7 @@ if(!empty($ojt_topic_items)) {
                 'ojtid' => $ojtid,
                 'userid' => $learnerid,
                 'type' => OJT_CTYPE_TOPICITEM,
-                'topicitemid' => $topicitemid
+                'topicitemid' => $item->id
             )
         );
         if(!empty($completion_record)) {
@@ -115,9 +115,9 @@ if(!empty($signoffenabled)) {
         // else add as new record
         $signedoff = new stdClass();
         $signedoff->userid = $learnerid;
-        $signedoff->topicitemid = $sf;
-        $signedoff->witnessedby = $USER->id;
-        $signedoff->timewitnessed = time();
+        $signedoff->topicid = $sf;
+        $signedoff->modifiedby = $USER->id;
+        $signedoff->timemodified = time();
         
         $DB->insert_record('ojt_topic_signoff', $signedoff);
     }
@@ -130,3 +130,11 @@ if(!empty($ojt_topics)) {
         ojt_update_topic_completion($learnerid, $ojtid, $topic->id);
     }
 }
+
+echo json_encode(
+    array(
+        'msg' => 'success',
+        'status' => true
+    )
+);
+exit();

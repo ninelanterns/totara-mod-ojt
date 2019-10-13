@@ -118,9 +118,9 @@ if($userojt->saveallonsubmit) {
 // LOTHS-209
 // Updated PETHAS-115
 if ((has_capability('mod/ojt:evaluate', $modcontext) || has_capability('mod/ojt:signoff', $modcontext))) {
-    echo html_writer::link(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',array('cmid' => $cm->id)), get_string('submit','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
+    //echo html_writer::link(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',array('cmid' => $cm->id)), get_string('submit','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
 }else{
-    echo html_writer::link(new moodle_url($CFG->wwwroot.'/course/view.php',array('id' => $course->id)), get_string('backbutton','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
+    //echo html_writer::link(new moodle_url($CFG->wwwroot.'/course/view.php',array('id' => $course->id)), get_string('backbutton','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
 }
 
 // Finish the page.
