@@ -166,3 +166,5 @@ $string['menuoptions'] = 'Menu options';
 $string['menuoptions_help'] = 'Enter menu options in a new line.';
 $string['textquestion'] = 'Text question';
 $string['menuquestion'] = 'Menu question';
+// HWRHAS-239
+$string['questiontype'] = 'Question type';
