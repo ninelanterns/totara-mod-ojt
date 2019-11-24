@@ -78,7 +78,9 @@ if ($data = $form->get_data()) {
     $item->allowselffileuploads = !empty($data->allowselffileuploads) ? $data->allowselffileuploads : '';
     // HWRHAS-161
     // KINEO CCM
-    $item->other = !empty($data->menuoptions) ? $data->menuoptions : null;
+    if(!empty($data->menuoptions)) {
+        $item->other = $data->menuoptions;
+    }
     $item->type = $data->type;
 
     if (empty($data->id)) {
@@ -107,6 +109,9 @@ echo $OUTPUT->heading($PAGE->heading);
 if (!empty($itemid)) {
     $item = $DB->get_record('ojt_topic_item', array('id' => $itemid), '*', MUST_EXIST);
     $item->menuoptions = !empty($item->other) ? $item->other : '';
+    if(!empty($questiontype)) {
+        $item->type = $questiontype;
+    }
     $form->set_data($item);
 }
 
