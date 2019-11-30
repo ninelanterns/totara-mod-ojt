@@ -36,7 +36,7 @@ class backup_ojt_activity_structure_step extends backup_activity_structure_step 
 
         // Define the root element describing the ojt instance.
         $ojt = new backup_nested_element('ojt', array('id'), array(
-            'name', 'intro', 'introformat', 'saveallonsubmit', 'grade', 'completionmanagersignoff', 'managersignoff', 'itemwitness', 'completiontopics'));
+            'name', 'intro', 'introformat', 'completiontopics', 'managersignoff', 'itemwitness', 'allowselfevaluation', 'saveallonsubmit', 'grade', 'completionmanagersignoff'));
 
         $topics = new backup_nested_element('topics');
         $topic = new backup_nested_element('topic', array('id'), array(
