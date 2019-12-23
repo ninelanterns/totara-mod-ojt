@@ -168,3 +168,5 @@ $string['textquestion'] = 'Text question';
 $string['menuquestion'] = 'Menu question';
 // HWRHAS-239
 $string['questiontype'] = 'Question type';
+// HWRHAS-245
+$string['notassessed'] = 'Not yet assessed';
