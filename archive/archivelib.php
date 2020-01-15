@@ -67,7 +67,6 @@ function ojt_get_completed_ojts() {
              WHERE oc.type = :type
                AND oc.archived = :notarchived
                AND cmc.completionstate > :status
-               AND cmc.timecompleted IS NOT NULL
                 ";
 
     $params = array(
@@ -336,7 +335,7 @@ function ojt_completed_time($ojtid, $userid) {
     
     $module_completion = $DB->get_record('course_modules_completion', array('coursemoduleid' => $cmid, 'userid' => $userid));
     if(!empty($module_completion)) {
-        return $module_completion->timecompleted;
+        return !empty($module_completion->timecompleted) ? $module_completion->timecompleted : time();
     }
     return null;
 }

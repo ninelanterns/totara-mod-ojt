@@ -16,6 +16,11 @@ require('./archive.php');
 
 global $DB;
 
+if(!is_siteadmin()) {
+    print_error('You do not have permission to access this page');
+    die();
+}
+
 $config = get_config('ojt');
 if (!empty($config) && isset($config->pdfdefaultstate) && $config->pdfdefaultstate) {
     $task = new \mod_ojt\task\archive();
