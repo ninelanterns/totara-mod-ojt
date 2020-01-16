@@ -61,4 +61,15 @@ if ($ADMIN->fulltree) {
             0
         )
     );
+    
+    // VTNHAS-375
+    $settings->add(
+        new admin_setting_configtext(
+            'ojt/evidencetypeid',
+            get_string('evidencetypeid', 'mod_ojt'),
+            get_string('evidencetypeiddesc', 'mod_ojt'),
+            '',
+            PARAM_TEXT
+        )
+    );
 }

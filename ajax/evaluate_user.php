@@ -41,12 +41,10 @@ if(!empty($ojt_topic_items)) {
     foreach ($ojt_topic_items as $item) {
         $item_status = in_array($item->id, $status) ? OJT_COMPLETE : OJT_INCOMPLETE;
         // HWRHAS-161
-        $item_status = OJT_INCOMPLETE;
+        $item_status = $status[$item->id];
         if(!empty($menuoptions[$item->id])) {
             $item_status =  OJT_COMPLETE;
-        } else {
-            $item_status = in_array($item->id, $status) ? OJT_COMPLETE : OJT_INCOMPLETE;
-        }
+        } 
         $completion_record = $DB->get_record('ojt_completion', 
             array(
                 'ojtid' => $ojtid,
@@ -140,10 +138,15 @@ if(!empty($ojt_topics)) {
     }
 }
 
+// return a redirect URL
+// VTNHAS-375
+$course_module = ojt_get_course_module($ojtid);
+
 echo json_encode(
     array(
         'msg' => 'success',
-        'status' => true
+        'status' => true,
+        'redirectURL' => $CFG->wwwroot . '/mod/ojt/report.php?cmid='.$course_module->id
     )
 );
 exit();

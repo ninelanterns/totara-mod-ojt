@@ -264,13 +264,17 @@ function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid) {
 function ojt_add_evidence($ojt, $user) {
     global $DB;
     
+    // VTNHAS-375
+    // get evidence type
+    $evidencetypeid = get_config('ojt','evidencetypeid');
+    
     // add to evidence
     $evidence = new \stdClass();
     $evidence->name = $ojt->name;
     $evidence->timecreated = time();
     $evidence->timemodifield = time();
     $evidence->usermodified = null;
-    $evidence->evidencetypeid = 0;
+    $evidence->evidencetypeid = !empty($evidencetypeid) ? $evidencetypeid : 0;
     $evidence->userid = $user->id;
     $evidence->readonly = 0;
     

@@ -239,7 +239,7 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
         // init evaluate completion
         $('#mod-ojt-submit-evaluate-btn').click(function() {
             $('#ojt-confirmation-loading').show();
-            ojtobj.evaluateStudent(ojtobj.reloadPage);
+            ojtobj.evaluateStudent(ojtobj.redirectToEvaluate);
         });
     }, 
 
@@ -316,12 +316,18 @@ M.mod_ojt_evaluate = M.mod_ojt_evaluate || {
             type: 'POST',
             data:$('#mod-ojt-user-evaluate-form').serialize(),
             dataType: 'json',
-            success: callback,
+            success: function(data) {
+                callback(data.redirectURL);
+            },
             error: function (data) {
                 alert('Error saving evaluation data...');
                 $('#ojt-confirmation-loading').hide();
             }
         });
+    },
+    
+    redirectToEvaluate: function(redirecturl) {
+        window.location.replace(redirecturl);
     },
     
     reloadPage: function() {

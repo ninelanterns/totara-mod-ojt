@@ -16,6 +16,8 @@ require('./archive.php');
 
 global $DB;
 
+$evidencetypeid = get_config('ojt','evidencetypeid');
+
 if(!is_siteadmin()) {
     print_error('You do not have permission to access this page');
     die();

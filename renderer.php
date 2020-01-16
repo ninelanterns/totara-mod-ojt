@@ -275,15 +275,15 @@ class mod_ojt_renderer extends plugin_renderer_base {
                         $cellcontent = $this->render_menu_question_options($item, 'ojt-menu-question-select');
                     } else {
                         // KINEO CCM : LOTHS-201
-                        $completion_options = array(
-                            OJT_INCOMPLETE => get_string('newcompletionstatus'.OJT_INCOMPLETE,'ojt'),
-                            OJT_NOT_COMPETENT => get_string('newcompletionstatus'.OJT_NOT_COMPETENT, 'ojt'),
-                            OJT_COMPLETE => get_string('newcompletionstatus'.OJT_COMPLETE,'ojt')
-                        );
-                        // Add badge
-                        $cellcontent = html_writer::span(get_string('newcompletionstatus'.$item->status, 'ojt'), 'badge completionstatus'.$item->status, array('id' => 'ojt-badge-'.$item->id));
-                        // Add select dropdown instead of checkbox
-                        $cellcontent .= html_writer::select($completion_options, 'completion_status', $item->status, false, array('ojt-item-id' => $item->id, 'class' => 'ojt-completion-toggle'));
+//                        $completion_options = array(
+//                            OJT_INCOMPLETE => get_string('newcompletionstatus'.OJT_INCOMPLETE,'ojt'),
+//                            OJT_NOT_COMPETENT => get_string('newcompletionstatus'.OJT_NOT_COMPETENT, 'ojt'),
+//                            OJT_COMPLETE => get_string('newcompletionstatus'.OJT_COMPLETE,'ojt')
+//                        );
+//                        // Add badge
+//                        $cellcontent = html_writer::span(get_string('newcompletionstatus'.$item->status, 'ojt'), 'badge completionstatus'.$item->status, array('id' => 'ojt-badge-'.$item->id));
+//                        // Add select dropdown instead of checkbox
+//                        $cellcontent .= html_writer::select($completion_options, 'completion_status', $item->status, false, array('ojt-item-id' => $item->id, 'class' => 'ojt-completion-toggle'));
 
                         // KINEO CCM
                         // Toggle comment based on setting
@@ -498,7 +498,12 @@ class mod_ojt_renderer extends plugin_renderer_base {
         
         $out .= html_writer::start_tag('form', array('id' => 'mod-ojt-user-evaluate-form'));
         
-        
+        // make form disabled 
+        // if ojt is marked as complete
+        if($userojt->status == OJT_COMPLETE) {
+            $out .= html_writer::start_tag('fieldset', array('disabled' => 'disabled'));
+        }
+
         // userid 
         $out .= html_writer::tag('input', null, 
             array(
@@ -574,19 +579,14 @@ class mod_ojt_renderer extends plugin_renderer_base {
                     html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
                 $row[] = format_string($item->name).$optionalstr;
                 if ($evaluate) {
-                    //$completionicon = $item->status == OJT_COMPLETE ? 'completion-manual-y' : 'completion-manual-n';
                     $cellcontent = html_writer::start_tag('div', array('class' => 'ojt-eval-actions', 'ojt-item-id' => $item->id));
-                    //$cellcontent .= $this->output->flex_icon($completionicon, ['classes' => 'ojt-completion-toggle-no-click']);
                     if($item->type == OJT_QUESTION_TYPE_TEXT) {
-                        $completion_param =  array(
-                            'type' => 'checkbox',
-                            'name' => 'topicitems_status[]',
-                            'value' => $item->id
+                        $completion_options = array(
+                            OJT_INCOMPLETE => get_string('newcompletionstatus'.OJT_INCOMPLETE,'ojt'),
+                            OJT_NOT_COMPETENT => get_string('newcompletionstatus'.OJT_NOT_COMPETENT, 'ojt'),
+                            OJT_COMPLETE => get_string('newcompletionstatus'.OJT_COMPLETE,'ojt')
                         );
-                        if($item->status == OJT_COMPLETE) {
-                            $completion_param['checked'] = 'checked';
-                        }
-                        $cellcontent .= html_writer::tag('input',null, $completion_param);
+                        $cellcontent .= html_writer::select($completion_options, "topicitems_status[$item->id]", $item->status, false, array('ojt-item-id' => $item->id, 'class' => 'ojt-completion-toggle-no-click'));
                         $cellcontent .= html_writer::tag('textarea', $item->comment,
                             array('name' => "comments[$item->id]", 'rows' => 8, 'cols' => 80,
                                 'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
@@ -728,7 +728,9 @@ class mod_ojt_renderer extends plugin_renderer_base {
                 'type' => 'button'
             )
         );
-        
+        if($userojt->status == OJT_COMPLETE) {
+            $out .= html_writer::end_tag('fieldset');
+        }
         $out .= html_writer::end_tag('form'); // mod-ojt-user-evaluate-form
         
         $out .= html_writer::end_tag('div');  // mod-ojt-user-ojt

@@ -121,27 +121,15 @@ if ($ojt->intro) {
 $renderer = $PAGE->get_renderer('ojt');
 if($userojt->saveallonsubmit) {
     echo $renderer->user_ojt_save_on_submission($userojt, $canevaluate, $cansignoff, $canwitness);
-    echo $renderer->activity_completion_status_dropdown($userojt);
+    // on ojt_completion table
+    // on column type = 0 = ojt
+    // type = 1 = Topic etc
+    // so depending on the status update this status
+    //echo $renderer->activity_completion_status_dropdown($userojt);
+    echo html_writer::div(html_writer::tag('i', '', array('class' => 'fa fa-spinner fa-spin')), '', array('id' => 'ojt-confirmation-loading'));
 } else {
     echo $renderer->user_ojt($userojt, $canevaluate, $cansignoff, $canwitness);
 }
-
-// KINEO CCM
-// LOTHS-209
-// Updated PETHAS-115
-if ((has_capability('mod/ojt:evaluate', $modcontext) || has_capability('mod/ojt:signoff', $modcontext))) {
-    //echo html_writer::link(new moodle_url($CFG->wwwroot.'/mod/ojt/report.php',array('cmid' => $cm->id)), get_string('submit','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
-}else{
-    //echo html_writer::link(new moodle_url($CFG->wwwroot.'/course/view.php',array('id' => $course->id)), get_string('backbutton','ojt'), array('id' => 'ojt-evaluate-submit-btn','class' => 'btn btn-default'));
-}
-
-// echo $renderer->activity_completion_status_dropdown($userojt);
-// on ojt_completion table
-// on column type = 0 = ojt
-// type = 1 = Topic etc
-// so depending on the status update this status
-
-
 
 // Finish the page.
 echo $OUTPUT->footer();
