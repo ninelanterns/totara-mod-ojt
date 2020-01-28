@@ -138,6 +138,36 @@ if(!empty($ojt_topics)) {
     }
 }
 
+// Mark OJT as complete after the from has been submitted
+// VTNHAS-375
+$currentcompletion = $DB->get_record('ojt_completion',
+        array('userid' => $learnerid, 'ojtid' => $ojtid, 'type' => OJT_CTYPE_OJT));
+if (empty($currentcompletion->status) ||  $currentcompletion->status != OJT_COMPLETE) {
+    // Update ojt completion
+    $completion = empty($currentcompletion) ? new stdClass() : $currentcompletion;
+    $completion->status = OJT_COMPLETE;
+    $completion->timemodified = time();
+    $completion->modifiedby = $USER->id;
+    if (empty($currentcompletion)) {
+        $completion->userid = $learnerid;
+        $completion->type = OJT_CTYPE_OJT;
+        $completion->ojtid = $ojtid;
+        $completion->id = $DB->insert_record('ojt_completion', $completion);
+    } else {
+        $DB->update_record('ojt_completion', $completion);
+    }
+}
+$topic_completions = $DB->get_records('ojt_completion',
+        array('userid' => $learnerid, 'ojtid' => $ojtid, 'type' => OJT_CTYPE_TOPIC));
+if(!empty($topic_completions)) {
+    foreach ($topic_completions as $topic_completion) {
+        $topic_completion->status = OJT_COMPLETE;
+        $DB->update_record('ojt_completion', $topic_completion);
+    }
+}
+
+ojt_update_activity_completion($ojtid, $learnerid, OJT_COMPLETE, true);
+
 // return a redirect URL
 // VTNHAS-375
 $course_module = ojt_get_course_module($ojtid);

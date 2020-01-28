@@ -96,7 +96,8 @@ function ojt_prepare_topics_html_for_archiving($topics) {
             
             $table->head = array(
                 get_string('topic_item', 'mod_ojt'),
-                get_string('topiccomments', 'mod_ojt')
+                get_string('topiccomments', 'mod_ojt'),
+                get_string('completionstatus', 'mod_ojt')
             );
             
             $count = 0;
@@ -105,6 +106,7 @@ function ojt_prepare_topics_html_for_archiving($topics) {
                 
                 $data[] = $item['topicitem'];
                 $data[] = $item['comment'];
+                $data[] = $item['completionstatus'];
                 $table->data[] = $data;
                 if($count % 2) {
                     $table->rowclasses[] = 'even';
@@ -134,7 +136,8 @@ function ojt_get_user_topics_data($ojtid, $userid) {
                     ot.name AS topicname, 
                     ot.id AS topicid,
                     oti.name AS topic_itemname, 
-                    oc.comment
+                    oc.comment,
+                    oc.status as completionstatus
               FROM {ojt_topic} ot
          LEFT JOIN {ojt_topic_item}  oti
                 ON ot.id = oti.topicid
@@ -154,7 +157,8 @@ function ojt_get_user_topics_data($ojtid, $userid) {
             $topics[$record->topicid]['topic'] = $record->topicname;
             $topics[$record->topicid]['items'][] = array(
                 'topicitem' => $record->topic_itemname,
-                'comment' => $record->comment
+                'comment' => $record->comment,
+                'completionstatus' => get_string('newcompletionstatus'.$record->completionstatus, 'mod_ojt')
             );
         }
     }

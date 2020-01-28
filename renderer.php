@@ -220,7 +220,7 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $hide_comment = true;
         }
         $topics_collapsed = false;
-        if(!empty($config) && isset($config->topicsdefaultstate) && $config->topicsdefaultstate) {
+        if(!empty($config) && !empty($config->topicsdefaultstate)) {
             $topics_collapsed = true;
         }
         // END KINEO CCM
@@ -492,6 +492,16 @@ class mod_ojt_renderer extends plugin_renderer_base {
      */
     function user_ojt_save_on_submission($userojt, $evaluate=false, $signoff=false, $itemwitness=false) {
         global $CFG, $DB, $USER, $PAGE;
+        
+        $config = get_config('ojt');
+        $hide_comment = false;
+        if(!empty($config) && !empty($config->hidecommentbox)) {
+            $hide_comment = true;
+        }
+        $topics_collapsed = false;
+        if(!empty($config) && !empty($config->topicsdefaultstate)) {
+            $topics_collapsed = true;
+        }
   
         $out = '';
         $out = html_writer::start_tag('div', array('id' => 'mod-ojt-user-ojt'));
@@ -563,11 +573,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
             $optionalstr = $topic->completionreq == OJT_OPTIONAL ?
                 html_writer::tag('em', ' ('.get_string('optional', 'ojt').')') : '';
             $out .= html_writer::tag('div', format_string($topic->name).$optionalstr.$completionicon,
-                array('class' => 'mod-ojt-topic-heading collapsed'));
+                array('class' => 'mod-ojt-topic-heading ' . ($topics_collapsed ? 'collapsed' : 'expanded')));
 
             $table = new html_table();
             $table->attributes['class'] = 'mod-ojt-topic-items generaltable';
-            $table->attributes['style'] = 'display:none;';
+            $table->attributes['style'] = ($topics_collapsed ? 'display:none;' : '');
             if ($userojt->itemwitness) {
                 $table->head = array('', '', get_string('witnessed', 'mod_ojt'));
             }
@@ -587,11 +597,13 @@ class mod_ojt_renderer extends plugin_renderer_base {
                             OJT_COMPLETE => get_string('newcompletionstatus'.OJT_COMPLETE,'ojt')
                         );
                         $cellcontent .= html_writer::select($completion_options, "topicitems_status[$item->id]", $item->status, false, array('ojt-item-id' => $item->id, 'class' => 'ojt-completion-toggle-no-click'));
-                        $cellcontent .= html_writer::tag('textarea', $item->comment,
-                            array('name' => "comments[$item->id]", 'rows' => 8, 'cols' => 80,
-                                'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
-                        $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
-                        array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
+                        if(!$hide_comment) {
+                            $cellcontent .= html_writer::tag('textarea', $item->comment,
+                                array('name' => "comments[$item->id]", 'rows' => 8, 'cols' => 80,
+                                    'class' => 'ojt-completion-comment-prevent-save-on-chage', 'ojt-item-id' => $item->id));
+                            $cellcontent .= html_writer::tag('div', format_text($item->comment, FORMAT_PLAIN),
+                            array('class' => 'ojt-completion-comment-print', 'ojt-item-id' => $item->id));
+                        }
                     } else {
                         // dorpdown menu type
                         $cellcontent .= $this->render_menu_question_options($item);

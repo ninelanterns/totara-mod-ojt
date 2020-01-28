@@ -19,8 +19,11 @@ global $DB;
 
 //var_dump($CFG);
 
-$userid = 6;
-$ojtid = 2;
+//$userid = 6;
+//$ojtid = 6;
+
+//$topics = mod_ojt\ojt_get_user_topics_data($ojtid, $userid);
+//pre_dump($topics);
 
 //\mod_ojt\ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid);
 exit();
