@@ -173,3 +173,6 @@ $string['notassessed'] = 'Not yet assessed';
 // VTNHAS-375
 $string['evidencetypeid'] = 'Evidence Type ID';
 $string['evidencetypeiddesc'] = 'This ID will be used to map the evidence type for the OJT archived files';
+//VTNHAS-390
+$string['completion_date'] = 'Date of completion';
+$string['observer'] = 'Observer';
