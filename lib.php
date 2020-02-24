@@ -47,6 +47,7 @@ define('OJT_INCOMPLETE', 0);
 define('OJT_REQUIREDCOMPLETE', 1);
 define('OJT_COMPLETE', 2);
 define('OJT_FAILED', 3);
+define('OJT_REASSESSMENT', 4);
 
 /**
  * OJT completion statuses text
@@ -59,6 +60,7 @@ define('OJT_COMPLETION_INCOMPLETE', 'incomplete');
 define('OJT_COMPLETION_REQUIREDCOMPLETE', 'requiredcomplete');
 define('OJT_COMPLETION_COMPLETE', 'complete');
 define('OJT_COMPLETION_FAILED', 'failed');
+define('OJT_COMPLETION_REASSESSMENT', 'reassessment');
 
 /**
  * OJT completion requirements

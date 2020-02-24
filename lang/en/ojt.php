@@ -51,12 +51,17 @@ $string['competencies'] = 'Competencies';
 $string['competencies_help'] = 'Here you can select which of the assigned course competencies should be marked as proficient upon completion of this topic.
 
 Multiple competencies can be selected by holding down \<CTRL\> and and selecting the items.';
+
 $string['completionstatus'] = 'Completion status';
 $string['completionstatus0'] = 'Incomplete';
 $string['completionstatus1'] = 'Required complete';
 $string['completionstatus2'] = 'Complete';
 // HWRHAS-1599
 $string['completionstatus3'] = 'Training required';
+// HWRHAS-254
+$string['completionstatus4'] = 'Re-assessment required';
+
+
 $string['completiontopics'] = 'All required topics are complete and, if enabled, witnessed.';
 $string['confirmtopicdelete'] = 'Are you sure you want to delete this topic?';
 $string['confirmitemdelete'] = 'Are you sure you want to delete this topic item?';

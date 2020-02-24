@@ -223,7 +223,7 @@ function ojt_update_topic_competency_proficiency($userid, $topicid, $status) {
  * @param type $tutor_forced_completion_status
  * @return type
  */
-function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status = null) {
+function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status = null, $modifieldby = null) {
     global $DB, $USER;
 
     // Check if all required ojt topics have been completed, then complete the ojt
@@ -243,6 +243,9 @@ function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status 
         } else if ($topic->status == OJT_REQUIREDCOMPLETE) {
             // Degrade status a bit
             $status = OJT_REQUIREDCOMPLETE;
+        } else if ($topic->status == OJT_COMPLETION_REASSESSMENT) {
+	        // Degrade status a bit
+	        $status = OJT_REASSESSMENT;
         }
     }
 
@@ -259,7 +262,7 @@ function ojt_update_completion($userid, $ojtid, $tutor_forced_completion_status 
         $completion = empty($currentcompletion) ? new stdClass() : $currentcompletion;
         $completion->status = $status;
         $completion->timemodified = time();
-        $completion->modifiedby = $USER->id;
+        $completion->modifiedby = empty($modifieldby) ? $USER->id : $modifieldby;
         if (empty($currentcompletion)) {
             $completion->userid = $userid;
             $completion->type = OJT_CTYPE_OJT;
@@ -577,5 +580,8 @@ function ojt_completion_status_text_to_int($completion_status) {
         case OJT_COMPLETION_REQUIREDCOMPLETE:
             return OJT_REQUIREDCOMPLETE;
             break;
+	    case OJT_COMPLETION_REASSESSMENT:
+		    return OJT_REASSESSMENT;
+		    break;
     }
 }

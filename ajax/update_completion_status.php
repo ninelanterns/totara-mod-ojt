@@ -25,6 +25,7 @@ global $DB, $USER;
 $ojtid = required_param('ojtid', PARAM_INT);
 $userid = required_param('userid', PARAM_INT);
 $completionstatus = required_param('completionstatus', PARAM_INT);
+$modifiedby = optional_param('modifiedby', 0,PARAM_INT);
 
 switch($completionstatus) {
     case OJT_INCOMPLETE:
@@ -36,9 +37,12 @@ switch($completionstatus) {
     case OJT_FAILED:
         $module_completion_status = OJT_COMPLETION_FAILED;
         break;
+	case OJT_REASSESSMENT:
+		$module_completion_status = OJT_COMPLETION_REASSESSMENT;
+		break;
 }
 
-$completion = ojt_update_completion($userid, $ojtid, $module_completion_status);
+$completion = ojt_update_completion($userid, $ojtid, $module_completion_status, $modifiedby);
 
 echo json_encode(
     array(

@@ -400,9 +400,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
      * @return type
      */
     function activity_completion_status_dropdown($userojt) {
+    	global $USER;
+
         $ojt_completion_status = array(
             array('key' => OJT_COMPLETE, 'value' => get_string('achieved', 'mod_ojt'), 'text' => get_string('achieved_modaltext', 'mod_ojt')),
-            array('key' => OJT_INCOMPLETE, 'value' => get_string('notachieved', 'mod_ojt'), 'text' => get_string('notachieved_modaltext', 'mod_ojt')),
+            array('key' => OJT_REASSESSMENT, 'value' => get_string('notachieved', 'mod_ojt'), 'text' => get_string('notachieved_modaltext', 'mod_ojt')),
             array('key' => OJT_FAILED, 'value' => get_string('trainingrequired', 'mod_ojt'), 'text' => get_string('trainingrequired_modaltext', 'mod_ojt'))
         );
         
@@ -410,10 +412,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
         $data->completion_status = $ojt_completion_status;
         $data->userid = $userojt->userid;
         $data->ojtid = $userojt->id;
+        $data->modifiedby = $USER->id;
         switch($userojt->status) {
             case OJT_INCOMPLETE:
                 $data->completionclass = 'ojt-incomplete';
-                $data->current_completion_status = get_string('notachieved', 'mod_ojt');
+                $data->current_completion_status = get_string('notassessed', 'mod_ojt');
                 break;
             
             case OJT_COMPLETE:
@@ -425,6 +428,11 @@ class mod_ojt_renderer extends plugin_renderer_base {
                 $data->completionclass = 'ojt-failed';
                 $data->current_completion_status = get_string('trainingrequired', 'mod_ojt');
                 break;
+
+	        case OJT_REASSESSMENT:
+		        $data->completionclass = 'ojt-incomplete';
+		        $data->current_completion_status = get_string('notachieved', 'mod_ojt');
+		        break;
         }
         
         return $this->render_from_template('mod_ojt/completion_status_dropdown', $data);     
