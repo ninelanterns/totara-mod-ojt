@@ -10,7 +10,6 @@
  * @version    1.0
  */
 
-define('NO_MOODLE_COOKIES', true);
 define('AJAX_SCRIPT', true);
 
 require_once('../../../config.php');
