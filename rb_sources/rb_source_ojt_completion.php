@@ -188,8 +188,9 @@ class rb_source_ojt_completion extends rb_base_source {
                             'userid' => 'base.userid',
                             'ojtid' => 'base.ojtid',
                             // KINEO CCM
-                            'courseid' => 'base.courseid'
-                            )
+                            'courseid' => 'base.courseid',
+                            'completionstatus' => 'base.status'
+                        )
                     )
             ),
 
@@ -460,6 +461,10 @@ class rb_source_ojt_completion extends rb_base_source {
 
     function rb_display_ojt_evaluate_link($ojtname, $row, $isexport) {
         if(is_ojt_available($row->userid, $row->courseid, $row->ojtid)) { // KINEO CCM
+            // VTNHAS-394
+            if($row->completionstatus == OJT_COMPLETE) {
+                return get_string('evaluate', 'rb_source_ojt_completion');
+            }
             return html_writer::link(new moodle_url('/mod/ojt/evaluate.php',
                 array('userid' => $row->userid, 'bid' => $row->ojtid)), get_string('evaluate', 'rb_source_ojt_completion'));
         }
