@@ -460,8 +460,16 @@ class rb_source_ojt_completion extends rb_base_source {
     }
 
     function rb_display_ojt_evaluate_link($ojtname, $row, $isexport) {
+    	global $USER;
         if(is_ojt_available($row->userid, $row->courseid, $row->ojtid)) { // KINEO CCM
-            // VTNHAS-394
+            // VTNHAS-400
+	        $cm_instance = get_coursemodule_from_instance('ojt', $row->ojtid, $row->courseid, false, MUST_EXIST);
+	        $modulecontext = context_module::instance($cm_instance->id);
+
+	        if (!has_capability('mod/ojt:evaluateself', $modulecontext) && $USER->id == $row->userid) {
+		        return '';
+	        }
+        	// VTNHAS-394
             if($row->completionstatus == OJT_COMPLETE) {
                 return get_string('evaluate', 'rb_source_ojt_completion');
             }
