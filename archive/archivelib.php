@@ -28,8 +28,7 @@ define('OJT_NOT_ARCHIVED', 0);
  * @global \mod_ojt\type $DB
  * @param type $ojtid
  */
-function ojt_markas_archived($ojtid, $userid)
-{
+function ojt_markas_archived($ojtid, $userid) {
     global $DB;
 
     $ojt = $DB->get_record('ojt_completion', array(
@@ -53,8 +52,7 @@ function ojt_markas_archived($ojtid, $userid)
  * @global type $DB
  * @return type
  */
-function ojt_get_completed_ojts()
-{
+function ojt_get_completed_ojts() {
     global $DB, $CFG;
     require_once($CFG->dirroot . '/lib/completionlib.php');
 
@@ -87,8 +85,7 @@ function ojt_get_completed_ojts()
  * @param type $topics
  * @return type
  */
-function ojt_prepare_topics_html_for_archiving($topics)
-{
+function ojt_prepare_topics_html_for_archiving($topics) {
     global $DB;
 
     $out = '';
@@ -135,8 +132,7 @@ function ojt_prepare_topics_html_for_archiving($topics)
  * @param type $userid
  * @return type
  */
-function ojt_get_user_topics_data($ojtid, $userid)
-{
+function ojt_get_user_topics_data($ojtid, $userid) {
     global $DB;
 
     $sql = "SELECT oti.id,
@@ -182,8 +178,7 @@ function ojt_get_user_topics_data($ojtid, $userid)
  * @global \mod_ojt\type $DB
  * @param type $ojtid
  */
-function ojt_get_cmid($ojtid)
-{
+function ojt_get_cmid($ojtid) {
     global $DB;
 
     $sql = "SELECT cm.id AS cmid
@@ -205,8 +200,7 @@ function ojt_get_cmid($ojtid)
  * @param type $ojtid
  * @param type $userid
  */
-function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid)
-{
+function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid) {
     global $DB;
 
     raise_memory_limit(MEMORY_EXTRA);
@@ -287,8 +281,7 @@ function ojt_archive_and_add_pdf_file_to_evidence($ojtid, $userid)
  * @param type $user
  * @return type
  */
-function ojt_add_evidence($ojt, $user)
-{
+function ojt_add_evidence($ojt, $user) {
     global $DB;
 
     // VTNHAS-375
@@ -359,8 +352,7 @@ function ojt_add_evidence($ojt, $user)
  * @param type $userid
  * @return type
  */
-function ojt_completed_time($ojtid, $userid)
-{
+function ojt_completed_time($ojtid, $userid) {
     global $DB;
 
     $cmid = ojt_get_cmid($ojtid);
@@ -383,8 +375,7 @@ function ojt_completed_time($ojtid, $userid)
  * @param type $subject
  * @return type
  */
-function ojt_generate_pdf($html, $filename, $title, $subject, $userfullname, $observer)
-{
+function ojt_generate_pdf($html, $filename, $title, $subject, $userfullname, $observer) {
     global $CFG, $DB;
     ob_start();
 
@@ -414,7 +405,7 @@ function ojt_generate_pdf($html, $filename, $title, $subject, $userfullname, $ob
     $pdf->SetFooterMargin(PDF_MARGIN_FOOTER);
 
     // set auto page breaks
-    $pdf->SetAutoPageBreak(TRUE, PDF_MARGIN_BOTTOM);
+    $pdf->SetAutoPageBreak(true, PDF_MARGIN_BOTTOM);
 
 
     // Set font
@@ -445,24 +436,22 @@ EOF;
 
     $pdf->writeHTML($css . $html, true, false, true, false, '');
 
-    return $pdf->Output($filename,  'I');
+    return $pdf->Output($filename,  'S');
 }
 
 require_once($CFG->dirroot . '/mod/ojt/tcpdf/tcpdf.php');
 
 // Extend the TCPDF class to create custom Header and Footer
-class MYPDF extends \TCPDF
-{
+class MYPDF extends \TCPDF {
+
     var $htmlHeader;
 
-    public function setHtmlHeader($htmlHeader)
-    {
+    public function setHtmlHeader($htmlHeader) {
         $this->htmlHeader = $htmlHeader;
     }
 
     //Page header
-    public function Header()
-    {
+    public function Header() {
         ob_clean();
         $this->writeHTMLCell($w = 0, $h = 0, $x = '', $y = '', $this->htmlHeader, $border = 0, $ln = 1, $fill = 0, $reseth = true, $align = 'top', $autopadding = true);
         ob_flush();
