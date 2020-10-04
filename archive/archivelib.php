@@ -394,7 +394,7 @@ function ojt_generate_pdf($html, $filename, $title, $subject, $userfullname, $ob
 
     // set default header data
     $pdf->setHtmlHeader('<table cellspacing="2" cellpadding="2" border="0">
-    <tr><td clospan="2"><h2><strong>Observation Record: </strong>' . $title . '</h2></td></tr>
+    <tr><td clospan="2"><h2>' . $title . '</h2></td></tr>
     <tr><td width="50%"><h4>' . $userfullname . '</h4></td><td width="50%" align="right">' . $observer . '</td></tr>
     </table><br><hr>');
     $pdf->setFooterData(array(0, 64, 0), array(0, 64, 128));
