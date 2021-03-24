@@ -28,4 +28,4 @@ $string['type_topic_completion'] = 'OJT topic completion';
 $string['type_ojt_topic_signoff'] = 'OJT topic sign-off';
 $string['type'] = 'Type';
 $string['user'] = 'User';
-
+$string['sourcelabel'] = 'Course';

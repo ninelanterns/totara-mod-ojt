@@ -62,6 +62,7 @@ class rb_source_ojt_topic_item_completion extends rb_base_source {
         $this->requiredcolumns = $this->define_requiredcolumns();
         $this->sourcetitle = get_string('ojttopicitemcompletion', 'rb_source_ojt_topic_item_completion');
         $this->sourcewhere = 'base.type = '.OJT_CTYPE_TOPICITEM;
+        $this->sourcelabel = get_string('sourcelabel', 'rb_source_ojt_topic_item_completion');
 
         parent::__construct();
     }

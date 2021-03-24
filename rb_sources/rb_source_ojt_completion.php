@@ -82,6 +82,7 @@ class rb_source_ojt_completion extends rb_base_source {
         $this->defaultfilters = $this->define_defaultfilters();
         $this->requiredcolumns = $this->define_requiredcolumns();
         $this->sourcetitle = get_string('ojtcompletion', 'rb_source_ojt_completion');
+        $this->sourcelabel = get_string('sourcelabel', 'rb_source_ojt_topic_item_completion');
 
         parent::__construct();
     }
@@ -531,7 +532,7 @@ class rb_source_ojt_completion extends rb_base_source {
  *
  * Pass in an integer that represents a ojt completion type, e.g OJT_CTYPE_TOPIC
  */
-class rb_ojt_completion_type_content extends rb_base_content {
+class rb_ojt_completion_type_content extends \totara_reportbuilder\rb\content\base {
 
     /**
      * Generate the SQL to apply this content restriction
